@@ -11,7 +11,7 @@
 - 이해당사자의 문제 이해 및 AS-IS 파악
 - https://youtu.be/lqVs2SIABFk
 - 문제점목록, 발표PPT
-- 
+- https://github.com/RAKKUNN/SatelliteComSim/pull/6
 
 ### 1주차 활동
 - 프로젝트 디자인 개요
