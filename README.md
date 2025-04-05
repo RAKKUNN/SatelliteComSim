@@ -11,7 +11,7 @@
 - 문제 정의서
 - [🎬Youtube](https://youtu.be/5uXym8xghe4)
 - 문제 정의서 결과, 발표 PPT
-- [PR]()
+- [PR](https://github.com/RAKKUNN/SatelliteComSim/pull/17)
 
 ### 3주차 활동
 - 브레인스토밍
