@@ -31,3 +31,5 @@ Time Services,              CFE_TIME_CMD,       Time No-Op,    0, 0x1805, LE, 12
 Event Services,             CFE_EVS_CMD,        EVS No-Op,     0, 0x1801, LE, 127.0.0.1, 50000, CFE_EVS_NOOP_CC
 Command Ingest,             CI_LAB_CMD,         CI No-Op,      0, 0x1884, LE, 127.0.0.1, 50000, CI_LAB_NOOP_CC
 Sample App,                 SAMPLE_APP_CMD,     Sample No-Op,  0, 0x1882, LE, 127.0.0.1, 50000, SAMPLE_APP_NOOP_CC
+Sample App, sample_app_send_text_gui.py, Send Text, 99, 0x1882, LE, 127.0.0.1, 50000, NONE
+Sample App Text Send, sample_app_send_text_gui.py, Send Text, 2, 0x1882, LE, 127.0.0.1, 50000, NONE

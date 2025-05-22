@@ -1,0 +1,23 @@
+[2025-05-22 17:29:52.185431] GUI Opened for SAMPLE_APP Text Send (via Display Page)
+[2025-05-22 17:29:55.010537] GUI Opened for SAMPLE_APP Text Send (via Quick Command)
+[2025-05-22 17:29:57.513283] CMD → SAMPLE_APP | CMD_CODE=2 | TEXT="asd"
+[2025-05-22 17:30:01.156022] CMD → SAMPLE_APP | CMD_CODE=2 | TEXT="asd"
+[2025-05-22 17:30:04.170380] GUI Opened for SAMPLE_APP Text Send (via Display Page)
+[2025-05-22 17:30:06.232645] CMD → SAMPLE_APP | CMD_CODE=2 | TEXT="asdzxc"
+[2025-05-22 17:30:09.246715] GUI Opened for SAMPLE_APP Text Send (via Display Page)
+[2025-05-22 17:30:11.167823] CMD → SAMPLE_APP | CMD_CODE=2 | TEXT="ascxz"
+[2025-05-22 17:37:59.082404] GUI Opened for SAMPLE_APP Text Send (via Quick Command)
+[2025-05-22 17:38:01] SAMPLE_APP SEND_TEXT: "sdxcvadfazx"
+[2025-05-22 17:46:57.689776] GUI Opened for SAMPLE_APP Text Send (via Quick Command)
+[2025-05-22 17:46:59] SAMPLE_APP SEND_TEXT: "asczxcxz"
+[2025-05-22 17:51:58.770786] GUI Opened for SAMPLE_APP Text Send (via Display Page)
+[2025-05-22 17:52:00] SAMPLE_APP SEND_TEXT: "asdazxc"
+[2025-05-22 17:52:02.799145] GUI Opened for SAMPLE_APP Text Send (via Quick Command)
+[2025-05-22 17:52:04] SAMPLE_APP SEND_TEXT: "asdzxc"
+[2025-05-22 17:52:56.568491] GUI Opened for SAMPLE_APP Text Send (via Display Page)
+[2025-05-22 17:52:59.209549] GUI Opened for SAMPLE_APP Text Send (via Display Page)
+[2025-05-22 17:53:49.374917] GUI Opened for SAMPLE_APP Text Send (via Display Page)
+[2025-05-22 17:53:51.979024] GUI Opened for SAMPLE_APP Text Send (via Quick Command)
+[2025-05-22 17:53:53] SAMPLE_APP SEND_TEXT: "zxc"
+[2025-05-22 17:54:39.547124] GUI Opened for SAMPLE_APP Text Send (via Quick Command)
+[2025-05-22 17:54:44] SAMPLE_APP SEND_TEXT: "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz"

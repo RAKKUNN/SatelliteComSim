@@ -1,5 +1,20 @@
 # Changelog
 
+## Development Build: equuleus-rc1+dev73
+- 'Fix #443, Correct minor bugs + typos in the VxWorks layer'
+- See: <https://github.com/nasa/psp/pull/444>
+
+
+## Development Build: equuleus-rc1+dev67
+- 'Fix #452, rtems sysmom overflow buffer'
+- See: <https://github.com/nasa/psp/pull/453>
+
+
+## Development Build: equuleus-rc1:dev61
+- update PCS_malloc stub PoolSize overflow
+- Add rtems_sysmon unit test
+- See <https://github.com/nasa/PSP/pull/450> and <https://github.com/nasa/PSP/pull/448>
+
 ## Development Build: equuleus-rc1+dev55
 - rename parameter in CFE_PSP_MemSet handler to align with stub and actual code
 - See <https://github.com/nasa/PSP/pull/441>

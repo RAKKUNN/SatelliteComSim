@@ -1,5 +1,22 @@
 # Changelog
 
+## Development Build: equuleus-rc1+dev117
+- 'Fix nasa/cFS#839, Update Workflows to Ubuntu 22.04'
+- See: <https://github.com/nasa/osal/pull/1506>
+
+
+## Development Build: equuleus-rc1+dev113
+- 'Fix #1496, Update malloc stub'
+- See: <https://github.com/nasa/osal/pull/1497>
+
+
+## Development Build: equuleus-rc1+dev101
+- Update Select functions params
+- update ut_oscore_test.c
+- Update timer interval comparison
+- Update stack sizes for test tasks
+- See <https://github.com/nasa/osal/pull/1495>, <https://github.com/nasa/osal/pull/1499>, <https://github.com/nasa/osal/pull/1504>, and <https://github.com/nasa/osal/pull/1502>
+
 ## Development Build: equuleus-rc1+dev97
 - Correct README.md OSAL User's Guide links
 - See <https://github.com/nasa/osal/pull/1493>

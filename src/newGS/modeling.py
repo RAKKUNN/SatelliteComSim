@@ -1,14 +1,15 @@
+#!/usr/bin/env python3
+
 import sys
 import numpy as np
 import trimesh
 from PIL import Image
-from PyQt5.QtWidgets import QOpenGLWidget
+from PyQt5.QtWidgets import QOpenGLWidget, QApplication
 from PyQt5.QtCore import Qt, QTimer
 from OpenGL.GL import *
 from OpenGL.GLU import gluPerspective
 
 def load_model(filepath, texture_path=None):
-    # trimesh를 사용하여 GLB 파일을 로드합니다.
     mesh = trimesh.load(filepath, force='scene')
     if isinstance(mesh, trimesh.Scene):
         mesh = trimesh.util.concatenate(mesh.geometry.values())
@@ -32,8 +33,8 @@ class EarthSatelliteView(QOpenGLWidget):
         self.texture_id = None
         self.num_indices = 0
         self.vertices = None
-        self.rotation = [0, 0]  # [x, y] 회전값
-        self.zoom = -2.5        # 초기 줌 값
+        self.rotation = [30, -45]  # 초기 시점
+        self.zoom = -3.0           # 초기 줌
         self.last_pos = None
         self.timer = QTimer(self)
         self.timer.timeout.connect(self.update)
@@ -43,28 +44,24 @@ class EarthSatelliteView(QOpenGLWidget):
         glEnable(GL_DEPTH_TEST)
         glEnable(GL_TEXTURE_2D)
 
-        # 모델과 텍스처 로드
         vertices, indices, texcoords, texture = load_model(self.model_path, self.texture_path)
+        vertices *= 0.4  # 지구 크기 축소
         self.vertices = vertices
         self.num_indices = len(indices)
 
-        # VBO 생성
         self.vbo = glGenBuffers(1)
         glBindBuffer(GL_ARRAY_BUFFER, self.vbo)
         glBufferData(GL_ARRAY_BUFFER, vertices.nbytes, vertices, GL_STATIC_DRAW)
 
-        # EBO 생성
         self.ebo = glGenBuffers(1)
         glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, self.ebo)
         glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.nbytes, indices, GL_STATIC_DRAW)
 
-        # TBO (텍스처 좌표)가 있을 경우 생성
         if texcoords is not None:
             self.tbo = glGenBuffers(1)
             glBindBuffer(GL_ARRAY_BUFFER, self.tbo)
             glBufferData(GL_ARRAY_BUFFER, texcoords.nbytes, texcoords, GL_STATIC_DRAW)
 
-        # 텍스처 업로드
         if texture is not None:
             tex_data = texture.tobytes("raw", "RGB", 0, -1)
             width, height = texture.size
@@ -86,7 +83,6 @@ class EarthSatelliteView(QOpenGLWidget):
     def paintGL(self):
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT)
         glLoadIdentity()
-        # 카메라 위치 설정
         glTranslatef(0.0, 0.0, self.zoom)
         glRotatef(self.rotation[0], 1, 0, 0)
         glRotatef(self.rotation[1], 0, 1, 0)
@@ -126,13 +122,11 @@ class EarthSatelliteView(QOpenGLWidget):
         self.update()
 
     def wheelEvent(self, event):
-        delta = event.angleDelta().y() / 120  # 한 notch 당 15도
+        delta = event.angleDelta().y() / 120
         self.zoom += delta * 0.3
         self.update()
 
 if __name__ == "__main__":
-    # 간단한 테스트를 위한 standalone 실행 코드입니다.
-    from PyQt5.QtWidgets import QApplication
     app = QApplication(sys.argv)
     viewer = EarthSatelliteView("earth.glb", "textures/image_0.png")
     viewer.resize(800, 600)

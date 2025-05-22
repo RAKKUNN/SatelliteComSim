@@ -22,7 +22,7 @@ jobs:
       fail-fast: false
       matrix:
         build-type: [Debug, Release]
-        base-os: [ubuntu-22.04, ubuntu-20.04]
+        base-os: [ubuntu-22.04]
 
     runs-on: ${{ matrix.base-os }}
 
@@ -35,7 +35,7 @@ jobs:
 
       - name: Install Coverage Analysis Tools
         if: ${{ matrix.build-type == 'Debug' }}
-        run: sudo apt-get install -y lcov xsltproc && echo "run_lcov=TRUE" >> $GITHUB_ENV
+        run: sudo apt-get update && sudo apt-get install -y lcov xsltproc && echo "run_lcov=TRUE" >> $GITHUB_ENV
 
       - name: Set up debug environment
         if: ${{ matrix.build-type == 'Debug' }}

@@ -1,0 +1,6 @@
+# Command Code 0 - NOOP
+SAMPLE_APP_NOOP_CC, 0
+
+# Command Code 2 - Send PlainText
+SAMPLE_SEND_TEXT_CC, 2
+PlainText, STRING, 128

@@ -23,7 +23,6 @@
 /************************************************************************
  * Includes
  ************************************************************************/
-
 #include "cfe_psp.h"
 
 #include "iodriver_impl.h"
@@ -33,73 +32,12 @@
 #include <rtems/cpuuse.h>
 #include <rtems/score/threadimpl.h>
 #include <rtems/rtems/tasks.h>
-
-/********************************************************************
- * Local Defines
- ********************************************************************/
-#ifdef OS_MAXIMUM_PROCESSORS
-    #define RTEMS_SYSMON_MAX_CPUS  OS_MAXIMUM_PROCESSORS
-#else
-    #define RTEMS_SYSMON_MAX_CPUS  1
-#endif
-
-#define RTEMS_SYSMON_AGGREGATE_SUBSYS   0
-#define RTEMS_SYSMON_CPULOAD_SUBSYS     1
-#define RTEMS_SYSMON_AGGR_CPULOAD_SUBCH 0
-#define RTEMS_SYSMON_SAMPLE_DELAY       1000
-#define RTEMS_SYSMON_TASK_PRIORITY      100
-#define RTEMS_SYSMON_STACK_SIZE         4096
-#define RTEMS_SYSMON_MAX_SCALE          100000
-
-#ifdef DEBUG_BUILD
-#define RTEMS_SYSMON_DEBUG(...) OS_printf(__VA_ARGS__)
-#else
-#define RTEMS_SYSMON_DEBUG(...)
-#endif
-
-/********************************************************************
- * Local Type Definitions
- ********************************************************************/
-typedef struct rtems_sysmon_cpuload_core
-{
-    CFE_PSP_IODriver_AdcCode_t avg_load;
-    Timestamp_Control last_run_time;
-    Timestamp_Control idle_last_uptime;
-
-} rtems_sysmon_cpuload_core_t;
-
-typedef struct rtems_sysmon_cpuload_state
-{
-    volatile bool is_running;
-    volatile bool should_run;
-
-    rtems_id   task_id;
-    rtems_name task_name;
-
-    uint8_t    num_cpus;
-    rtems_sysmon_cpuload_core_t per_core[RTEMS_SYSMON_MAX_CPUS];
-
-} rtems_sysmon_cpuload_state_t;
-
-typedef struct rtems_sysmon_state
-{
-    uint32_t                     local_module_id;
-    rtems_sysmon_cpuload_state_t cpu_load;
-} rtems_sysmon_state_t;
+#include "rtems_sysmon.h"
 
 /********************************************************************
  * Local Function Prototypes
  ********************************************************************/
 static void    rtems_sysmon_Init(uint32_t local_module_id);
-static int32_t rtems_sysmon_Start(rtems_sysmon_cpuload_state_t *state);
-static int32_t rtems_sysmon_Stop(rtems_sysmon_cpuload_state_t *state);
-
-int32_t rtems_sysmon_aggregate_dispatch(uint32_t CommandCode, uint16_t Subchannel, CFE_PSP_IODriver_Arg_t Arg);
-int32_t rtems_sysmon_calc_aggregate_cpu(rtems_sysmon_cpuload_state_t *state, CFE_PSP_IODriver_AdcCode_t *Val);
-
-/* Function that starts up rtems_sysmon driver. */
-static int32_t rtems_sysmon_DevCmd(uint32_t CommandCode, uint16_t SubsystemId, uint16_t SubchannelId,
-                                   CFE_PSP_IODriver_Arg_t Arg);
 
 /********************************************************************
  * Global Data
@@ -112,7 +50,7 @@ CFE_PSP_IODriver_API_t rtems_sysmon_DevApi = {.DeviceCommand = rtems_sysmon_DevC
 
 CFE_PSP_MODULE_DECLARE_IODEVICEDRIVER(rtems_sysmon);
 
-static rtems_sysmon_state_t rtems_sysmon_global;
+rtems_sysmon_state_t rtems_sysmon_global;
 
 static const char *rtems_sysmon_subsystem_names[]  = {"aggregate", "per-cpu", NULL};
 static const char *rtems_sysmon_subchannel_names[] = {"cpu-load", NULL};
@@ -127,13 +65,13 @@ void rtems_sysmon_Init(uint32_t local_module_id)
     rtems_sysmon_global.local_module_id = local_module_id;
 }
 
-static bool rtems_cpu_usage_vistor(Thread_Control *the_thread, void *arg)
+bool rtems_cpu_usage_visitor(Thread_Control *the_thread, void *arg)
 {
     rtems_sysmon_cpuload_state_t *state = (rtems_sysmon_cpuload_state_t *)arg;
-    rtems_sysmon_cpuload_core_t* core_p = &state->per_core[state->num_cpus];
+    rtems_sysmon_cpuload_core_t* core_p;
 
-    Timestamp_Control uptime_at_last_calc = core_p->last_run_time;
-    Timestamp_Control idle_uptime_at_last_calc = core_p->idle_last_uptime;
+    Timestamp_Control uptime_at_last_calc;
+    Timestamp_Control idle_uptime_at_last_calc;
     Timestamp_Control current_uptime;
     Timestamp_Control idle_task_uptime;
     Timestamp_Control idle_uptime_elapsed;
@@ -144,8 +82,19 @@ static bool rtems_cpu_usage_vistor(Thread_Control *the_thread, void *arg)
     uint32_t fval; 
     bool status = false;
 
+    if(state->poll_core_no >= RTEMS_SYSMON_MAX_CPUS)
+    {
+        /* Set true to stop iterating. All idle task has been found. */
+        status = true; 
+        state->poll_core_no = 0;
+    }
+
+    core_p = &state->per_core[state->poll_core_no];
+    uptime_at_last_calc = core_p->last_run_time;
+    idle_uptime_at_last_calc = core_p->idle_last_uptime;
+
     _Thread_Get_name(the_thread, name, sizeof(name));
-    if(strncmp("IDLE", name, 4) == 0)
+    if(strncmp("IDLE", name, 4) == 0 && status == false)
     {
         #if __RTEMS_MAJOR__ == 5
         _Thread_Get_CPU_time_used( the_thread, &idle_task_uptime );
@@ -184,26 +133,7 @@ static bool rtems_cpu_usage_vistor(Thread_Control *the_thread, void *arg)
             core_p->avg_load |= (core_p->avg_load << 12);
         }
 
-        #ifdef DEBUG_BUILD
-        rtems_cpu_usage_report();
-        
-        uint32_t microsec = _Timestamp_Get_nanoseconds( &idle_uptime_elapsed ) / TOD_NANOSECONDS_PER_MICROSECOND;
-        uint32_t sec = _Timestamp_Get_seconds( &idle_uptime_elapsed );
-        RTEMS_SYSMON_DEBUG("\nCFE_PSP(rtems_sysmon): IDLE cpu time elapsed = %7u.%06u, IDLE percentages =%4u.%03u\n",
-                           sec, microsec, ival, fval);
-
-        microsec = _Timestamp_Get_nanoseconds( &total_elapsed ) / TOD_NANOSECONDS_PER_MICROSECOND;
-        sec = _Timestamp_Get_seconds( &total_elapsed );
-        RTEMS_SYSMON_DEBUG("CFE_PSP(rtems_sysmon): Total elapsed CPU time = %7u.%06u, CPU Load =%08X\n",
-                           sec, microsec, core_p->avg_load);
-        #endif
-
-        state->num_cpus++;
-        if(state->num_cpus >= RTEMS_SYSMON_MAX_CPUS)
-        {
-            /* stop checking when all idle tasks has been found */
-            status = true;
-        }
+        state->poll_core_no++;
     }
     
     /* return true to exit iterating tasks */
@@ -212,8 +142,8 @@ static bool rtems_cpu_usage_vistor(Thread_Control *the_thread, void *arg)
 
 void rtems_sysmon_update_stat(rtems_sysmon_cpuload_state_t *state)
 {
-    state->num_cpus = 0;
-    rtems_task_iterate( rtems_cpu_usage_vistor, state);
+    state->poll_core_no = 0;
+    rtems_task_iterate( rtems_cpu_usage_visitor, state);
 }
 
 rtems_task rtems_sysmon_Task(rtems_task_argument arg)
@@ -246,7 +176,7 @@ rtems_task rtems_sysmon_Task(rtems_task_argument arg)
  *  Starts the cpu load watcher function
  *
  * ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ */
-static int32_t rtems_sysmon_Start(rtems_sysmon_cpuload_state_t *state)
+int32_t rtems_sysmon_Start(rtems_sysmon_cpuload_state_t *state)
 {
     int32_t StatusCode;
     rtems_status_code status;
@@ -453,6 +383,12 @@ int32_t rtems_sysmon_cpu_load_dispatch(uint32_t CommandCode, uint16_t Subchannel
                 {
                     RdWr->Samples[ch] = state->per_core[ch].avg_load;
                 }
+
+                StatusCode = CFE_PSP_SUCCESS;
+            }
+            else
+            {
+                StatusCode = CFE_PSP_ERROR;
             }
 
             break;
