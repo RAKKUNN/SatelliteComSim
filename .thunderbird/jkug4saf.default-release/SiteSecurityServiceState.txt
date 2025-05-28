@@ -1,0 +1,1 @@
+services.addons.thunderbird.net:HSTS	0	20180	1775123518214,1,0

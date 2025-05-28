@@ -1,0 +1,1 @@
+Sample App,sample_app_send_text.txt,Send Text,2,0x1882,LE,127.0.0.1,1234,sample_app_send_text.txt
