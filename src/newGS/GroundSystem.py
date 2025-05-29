@@ -5,38 +5,32 @@ import shlex
 import subprocess
 import signal
 import pathlib
-from PyQt5.QtCore import Qt, QThread, pyqtSignal
+from PyQt5.QtCore import Qt, QThread, pyqtSignal, QSettings
 from PyQt5.QtWidgets import (
     QApplication, QMainWindow, QMessageBox, QWidget, QHBoxLayout,
-    QVBoxLayout, QGroupBox, QFormLayout, QLabel, QPushButton, QComboBox,
-    QSpinBox, QTextEdit, QSizePolicy, QDialog
+    QVBoxLayout, QGroupBox, QFormLayout, QLabel, QPushButton,
+    QComboBox, QSpinBox, QTextEdit, QDialog
 )
-
 from OpenGL.GL import *
 from OpenGL.GLU import *
 
 from modeling import EarthSatelliteView
 from satellite_setting import SatelliteSettingsDialog
 
-
 class CmdProcessReader(QThread):
     line_received = pyqtSignal(str)
-
     def __init__(self, process, parent=None):
         super().__init__(parent)
         self.process = process
         self._running = True
-
     def run(self):
         while self._running:
             line = self.process.stdout.readline()
             if not line:
                 break
             self.line_received.emit(line.rstrip('\n'))
-
     def stop(self):
         self._running = False
-
 
 class GroundSystemLogic:
     TLM_HDR_V1_OFFSET = 4
@@ -49,14 +43,14 @@ class GroundSystemLogic:
     def __init__(self, rootdir, display_error_callback=None):
         self.ROOTDIR = rootdir
         self.display_error_callback = display_error_callback
-        self.sb_tlm_offset_value = self.TLM_HDR_V1_OFFSET
+        self.sb_tlm_offset_value     = self.TLM_HDR_V1_OFFSET
         self.sb_cmd_offset_pri_value = self.CMD_HDR_PRI_V1_OFFSET
         self.sb_cmd_offset_sec_value = self.CMD_HDR_SEC_V1_OFFSET
-        self.ip_addresses_list = ['All']
-        self.spacecraft_names = ['All']
-        self.routing_service = None
-        self.cmd_process = None
-        self.cmd_process_reader = None
+        self.ip_addresses_list       = ['All']
+        self.spacecraft_names        = ['All']
+        self.routing_service         = None
+        self.cmd_process             = None
+        self.cmd_process_reader      = None
 
     def display_error_message(self, message: str):
         print("[ERROR]", message)
@@ -64,16 +58,16 @@ class GroundSystemLogic:
             self.display_error_callback(message)
 
     def get_selected_spacecraft_name(self, combo_box_text: str):
-        address = combo_box_text.strip()
-        idx = self.ip_addresses_list.index(address)
-        return self.spacecraft_names[idx].strip()
+        idx = self.ip_addresses_list.index(combo_box_text)
+        return self.spacecraft_names[idx]
 
     def start_tlm_system(self, selected_spacecraft: str):
         subscription = '--sub=GroundSystem'
         if selected_spacecraft != 'All':
             subscription += f'.{selected_spacecraft}.TelemetryPackets'
-        system_call = f'python3 {self.ROOTDIR}/Subsystems/tlmGUI/TelemetrySystem.py {subscription}'
-        args = shlex.split(system_call)
+        args = shlex.split(
+            f'python3 {self.ROOTDIR}/Subsystems/tlmGUI/TelemetrySystem.py {subscription}'
+        )
         subprocess.Popen(args)
 
     def start_cmd_system(self, on_stdout_callback=None):
@@ -82,11 +76,8 @@ class GroundSystemLogic:
             return
         cmd = ['python3', '-u', f'{self.ROOTDIR}/Subsystems/cmdGui/CommandSystem.py']
         self.cmd_process = subprocess.Popen(
-            cmd,
-            stdout=subprocess.PIPE,
-            stderr=subprocess.STDOUT,
-            text=True,
-            bufsize=1
+            cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+            text=True, bufsize=1
         )
         self.cmd_process_reader = CmdProcessReader(self.cmd_process)
         if on_stdout_callback:
@@ -102,27 +93,25 @@ class GroundSystemLogic:
             self.cmd_process_reader.wait()
 
     def set_tlm_offset(self, ver: str):
-        if ver == "1":
-            self.sb_tlm_offset_value = self.TLM_HDR_V1_OFFSET
-        elif ver == "2":
-            self.sb_tlm_offset_value = self.TLM_HDR_V2_OFFSET
+        self.sb_tlm_offset_value = (
+            self.TLM_HDR_V1_OFFSET if ver == '1' else self.TLM_HDR_V2_OFFSET
+        )
 
     def set_cmd_offsets(self, ver: str):
-        if ver == "1":
+        if ver == '1':
             self.sb_cmd_offset_pri_value = self.CMD_HDR_PRI_V1_OFFSET
             self.sb_cmd_offset_sec_value = self.CMD_HDR_SEC_V1_OFFSET
-        elif ver == "2":
+        else:
             self.sb_cmd_offset_pri_value = self.CMD_HDR_PRI_V2_OFFSET
             self.sb_cmd_offset_sec_value = self.CMD_HDR_SEC_V2_OFFSET
 
     def save_offsets(self):
-        offsets = bytes((
-            self.sb_tlm_offset_value,
-            self.sb_cmd_offset_pri_value,
-            self.sb_cmd_offset_sec_value
-        ))
-        with open("/tmp/OffsetData", "wb") as f:
-            f.write(offsets)
+        with open('/tmp/OffsetData', 'wb') as f:
+            f.write(bytes((
+                self.sb_tlm_offset_value,
+                self.sb_cmd_offset_pri_value,
+                self.sb_cmd_offset_sec_value
+            )))
 
     def update_ip_list(self, ip, name):
         self.ip_addresses_list.append(ip)
@@ -133,36 +122,48 @@ class GroundSystemLogic:
         self.routing_service.signal_update_ip_list.connect(self.update_ip_list)
         self.routing_service.start()
 
-
 class NextGenGroundSystem(QMainWindow):
     def __init__(self):
         super().__init__()
         self.setWindowTitle("차세대 위성통신 보안 시뮬레이터 (New GUI)")
         self.resize(1200, 800)
-        self.ROOTDIR = pathlib.Path(__file__).parent.absolute()
-        self.gs_logic = GroundSystemLogic(self.ROOTDIR, display_error_callback=self.show_error_message)
+
+        # persistent settings
+        self.settings = QSettings("MyCompany", "SatelliteComSim")
+
+        self.ROOTDIR  = pathlib.Path(__file__).parent.absolute()
+        self.gs_logic = GroundSystemLogic(self.ROOTDIR,
+                            display_error_callback=self.show_error_message)
 
         main_widget = QWidget()
         self.setCentralWidget(main_widget)
         h_layout = QHBoxLayout(main_widget)
         h_layout.setContentsMargins(5, 5, 5, 5)
 
-        # 왼쪽 패널 (3D 영역)
+        # Left: 3D view & satellite button
         left_panel = QWidget()
-        left_panel_layout = QVBoxLayout(left_panel)
-        self.earth_view = EarthSatelliteView()
-        left_panel_layout.addWidget(self.earth_view, stretch=4)
-        button_layout = QHBoxLayout()
-        btn_base_station = QPushButton("기지국 설정")
-        btn_satellite = QPushButton("위성 설정")
-        btn_comm = QPushButton("통신 설정")
-        button_layout.addWidget(btn_base_station)
-        button_layout.addWidget(btn_satellite)
-        button_layout.addWidget(btn_comm)
-        left_panel_layout.addLayout(button_layout, stretch=1)
+        left_layout = QVBoxLayout(left_panel)
+        self.earth_view = EarthSatelliteView(
+            model_path     = str(self.ROOTDIR / "earth.glb"),
+            texture_path   = str(self.ROOTDIR / "textures" / "image_0.png"),
+            bg_image_path  = str(self.ROOTDIR / "textures" / "background.jpg"),
+            sat_model_path = str(self.ROOTDIR / "textures" / "satellite.glb"),
+            parent         = self
+        )
+        left_layout.addWidget(self.earth_view, stretch=4)
+
+        # load saved satellite parameters
+        saved = self.settings.value("satellite/params", type=dict) or {}
+        if saved:
+            self.earth_view.updateSatelliteParameters(**saved)
+
+        btn_sat = QPushButton("위성 설정")
+        btn_sat.clicked.connect(self.openSatelliteSettings)
+        left_layout.addWidget(btn_sat)
+
         h_layout.addWidget(left_panel, stretch=5)
 
-        # 오른쪽 패널 (로그 및 제어 영역)
+        # Right: log output & controls
         right_panel = QWidget()
         right_layout = QVBoxLayout(right_panel)
         self.log_output = QTextEdit()
@@ -171,8 +172,8 @@ class NextGenGroundSystem(QMainWindow):
 
         control_box = QGroupBox("제어 / 공격 시뮬레이션")
         control_layout = QVBoxLayout(control_box)
-
         form_layout = QFormLayout()
+
         self.cb_tlm_header = QComboBox()
         self.cb_tlm_header.addItems(["1", "2", "Custom"])
         self.cb_tlm_header.currentTextChanged.connect(self.on_tlm_header_changed)
@@ -189,132 +190,114 @@ class NextGenGroundSystem(QMainWindow):
         self.cb_cmd_header.currentTextChanged.connect(self.on_cmd_header_changed)
         form_layout.addRow("CMD Header Ver", self.cb_cmd_header)
 
-        self.sb_cmd_offset_pri = QSpinBox()
-        self.sb_cmd_offset_pri.setRange(0, 64)
-        self.sb_cmd_offset_pri.setValue(self.gs_logic.sb_cmd_offset_pri_value)
-        self.sb_cmd_offset_pri.valueChanged.connect(self.on_cmd_offset_pri_changed)
-        form_layout.addRow("CMD Offset PRI", self.sb_cmd_offset_pri)
+        self.sb_cmd_pri = QSpinBox()
+        self.sb_cmd_pri.setRange(0, 64)
+        self.sb_cmd_pri.setValue(self.gs_logic.sb_cmd_offset_pri_value)
+        self.sb_cmd_pri.valueChanged.connect(self.on_cmd_offset_pri_changed)
+        form_layout.addRow("CMD Offset PRI", self.sb_cmd_pri)
 
-        self.sb_cmd_offset_sec = QSpinBox()
-        self.sb_cmd_offset_sec.setRange(0, 64)
-        self.sb_cmd_offset_sec.setValue(self.gs_logic.sb_cmd_offset_sec_value)
-        self.sb_cmd_offset_sec.valueChanged.connect(self.on_cmd_offset_sec_changed)
-        form_layout.addRow("CMD Offset SEC", self.sb_cmd_offset_sec)
+        self.sb_cmd_sec = QSpinBox()
+        self.sb_cmd_sec.setRange(0, 64)
+        self.sb_cmd_sec.setValue(self.gs_logic.sb_cmd_offset_sec_value)
+        self.sb_cmd_sec.valueChanged.connect(self.on_cmd_offset_sec_changed)
+        form_layout.addRow("CMD Offset SEC", self.sb_cmd_sec)
 
         control_layout.addLayout(form_layout)
         control_layout.addWidget(QLabel("IP 선택"))
-        self.cb_ip_addresses = QComboBox()
-        self.cb_ip_addresses.addItem("All")
-        control_layout.addWidget(self.cb_ip_addresses)
+        self.cb_ips = QComboBox()
+        self.cb_ips.addItem("All")
+        control_layout.addWidget(self.cb_ips)
 
         btn_tlm = QPushButton("Start Telemetry")
         btn_tlm.clicked.connect(self.on_start_tlm)
-        control_layout.addWidget(btn_tlm)
-
         btn_cmd = QPushButton("Start Command")
         btn_cmd.clicked.connect(self.on_start_cmd)
+        control_layout.addWidget(btn_tlm)
         control_layout.addWidget(btn_cmd)
 
-        # ✅ FDL 제거 → 커맨드 로그 초기화 버튼으로 대체
-        btn_clear_cmd_log = QPushButton("커맨드 로그 초기화")
-        btn_clear_cmd_log.clicked.connect(self.clear_cmd_log)
-        control_layout.addWidget(btn_clear_cmd_log)
+        btn_clear = QPushButton("커맨드 로그 초기화")
+        btn_clear.clicked.connect(self.clear_cmd_log)
+        control_layout.addWidget(btn_clear)
 
-        # 사이버 공격 버튼
         control_layout.addWidget(QLabel("사이버 공격"))
-        attack_layout = QHBoxLayout()
-        btn_jamming = QPushButton("재밍")
-        btn_spoofing = QPushButton("스푸핑")
-        btn_key_theft = QPushButton("재전송")
-        attack_layout.addWidget(btn_jamming)
-        attack_layout.addWidget(btn_spoofing)
-        attack_layout.addWidget(btn_key_theft)
-        control_layout.addLayout(attack_layout)
-
-        btn_jamming.clicked.connect(lambda: self.append_terminal_output("[공격] 재밍 실행"))
-        btn_spoofing.clicked.connect(lambda: self.append_terminal_output("[공격] 스푸핑 실행"))
-        btn_key_theft.clicked.connect(lambda: self.append_terminal_output("[공격] 재전송 실행"))
+        atk_layout = QHBoxLayout()
+        for lbl in ["재밍", "스푸핑", "재전송"]:
+            b = QPushButton(lbl)
+            b.clicked.connect(lambda _,m=lbl: self.append_terminal_output(f"[공격] {m} 실행"))
+            atk_layout.addWidget(b)
+        control_layout.addLayout(atk_layout)
 
         right_layout.addWidget(control_box, stretch=2)
         h_layout.addWidget(right_panel, stretch=3)
 
-        btn_satellite.clicked.connect(self.openSatelliteSettings)
         self.init_routing_service()
+
+    def openSatelliteSettings(self):
+        dlg = SatelliteSettingsDialog(self)
+        curr = self.earth_view.getCurrentParameters()
+        dlg.cb_sat_type.setCurrentText(curr['sat_type'])
+        dlg.ds_sat_size.setValue(curr['sat_size'])
+        dlg.ds_sat_speed.setValue(curr['sat_speed'])
+        dlg.ds_orbital_radius.setValue(curr['orbital_radius'])
+        dlg.ds_inclination.setValue(curr['inclination'])
+        dlg.ds_eccentricity.setValue(curr['eccentricity'])
+        dlg.ds_frequency.setValue(curr['frequency'])
+        dlg.ds_antenna_gain.setValue(curr['antenna_gain'])
+        dlg.ds_transmit_power.setValue(curr['transmit_power'])
+
+        if dlg.exec_() == QDialog.Accepted:
+            params = dlg.getParameters()
+            self.earth_view.updateSatelliteParameters(**params)
+            self.settings.setValue("satellite/params", params)
+            self.append_terminal_output(
+                f"[시스템] 위성 파라미터 변경됨: 크기={params['sat_size']}, 속도={params['sat_speed']} 등..."
+            )
 
     def clear_cmd_log(self):
         self.log_output.clear()
         self.append_terminal_output("[시스템] 커맨드 로그가 초기화되었습니다.")
 
-    def openSatelliteSettings(self):
-        dialog = SatelliteSettingsDialog(self)
-        if dialog.exec_() == QDialog.Accepted:
-            params = dialog.getParameters()
-            self.earth_view.updateSatelliteParameters(
-                params["sat_type"],
-                params["sat_size"],
-                params["sat_speed"],
-                params["orbital_radius"],
-                params["inclination"],
-                params["eccentricity"],
-                params["frequency"],
-                params["antenna_gain"],
-                params["transmit_power"]
-            )
-            self.append_terminal_output(
-                f"[시스템] 위성 파라미터 적용: 종류={params['sat_type']}, 궤도={params['orbital_radius']}km 등..."
-            )
+    def show_error_message(self, msg):
+        QMessageBox.warning(self, "Error", msg)
 
-    def show_error_message(self, message):
-        QMessageBox.warning(self, "Error", message)
-
-    def append_terminal_output(self, message: str):
-        if message.startswith("[시스템]"):
-            color = "blue"
-        elif message.startswith("[CMD]"):
-            color = "black"
-        elif message.startswith("[공격]"):
-            color = "red"
-        else:
-            color = "black"
-        formatted_message = f"<font color='{color}'>{message}</font>"
-        self.log_output.append(formatted_message)
+    def append_terminal_output(self, msg: str):
+        color = "blue" if msg.startswith("[시스템]") else "red" if msg.startswith("[공격]") else "black"
+        self.log_output.append(f"<font color='{color}'>{msg}</font>")
 
     def on_start_tlm(self):
-        selected_ip = self.cb_ip_addresses.currentText()
-        sc_name = self.gs_logic.get_selected_spacecraft_name(selected_ip)
-        self.gs_logic.start_tlm_system(sc_name)
+        sc = self.gs_logic.get_selected_spacecraft_name(self.cb_ips.currentText())
+        self.gs_logic.start_tlm_system(sc)
         self.append_terminal_output("[시스템] Telemetry System Started")
 
     def on_start_cmd(self):
-        def handle_cmd_stdout(line: str):
-            self.append_terminal_output(f"[CMD] {line}")
-        self.gs_logic.start_cmd_system(on_stdout_callback=handle_cmd_stdout)
+        def handler(line): self.append_terminal_output(f"[CMD] {line}")
+        self.gs_logic.start_cmd_system(on_stdout_callback=handler)
         self.append_terminal_output("[시스템] Command System Started")
 
-    def on_cmd_header_changed(self, text):
-        self.gs_logic.set_cmd_offsets(text)
-        self.sb_cmd_offset_pri.setEnabled(text == "Custom")
-        self.sb_cmd_offset_sec.setEnabled(text == "Custom")
-        self.sb_cmd_offset_pri.setValue(self.gs_logic.sb_cmd_offset_pri_value)
-        self.sb_cmd_offset_sec.setValue(self.gs_logic.sb_cmd_offset_sec_value)
+    def on_cmd_header_changed(self, txt):
+        self.gs_logic.set_cmd_offsets(txt)
+        self.sb_cmd_pri.setEnabled(txt == "Custom")
+        self.sb_cmd_sec.setEnabled(txt == "Custom")
+        self.sb_cmd_pri.setValue(self.gs_logic.sb_cmd_offset_pri_value)
+        self.sb_cmd_sec.setValue(self.gs_logic.sb_cmd_offset_sec_value)
         self.gs_logic.save_offsets()
 
-    def on_cmd_offset_pri_changed(self, val):
-        self.gs_logic.sb_cmd_offset_pri_value = val
+    def on_cmd_offset_pri_changed(self, v):
+        self.gs_logic.sb_cmd_offset_pri_value = v
         self.gs_logic.save_offsets()
 
-    def on_cmd_offset_sec_changed(self, val):
-        self.gs_logic.sb_cmd_offset_sec_value = val
+    def on_cmd_offset_sec_changed(self, v):
+        self.gs_logic.sb_cmd_offset_sec_value = v
         self.gs_logic.save_offsets()
 
-    def on_tlm_header_changed(self, text):
-        self.gs_logic.set_tlm_offset(text)
-        self.sb_tlm_offset.setEnabled(text == "Custom")
+    def on_tlm_header_changed(self, txt):
+        self.gs_logic.set_tlm_offset(txt)
+        self.sb_tlm_offset.setEnabled(txt == "Custom")
         self.sb_tlm_offset.setValue(self.gs_logic.sb_tlm_offset_value)
         self.gs_logic.save_offsets()
 
-    def on_tlm_offset_changed(self, val):
-        self.gs_logic.sb_tlm_offset_value = val
+    def on_tlm_offset_changed(self, v):
+        self.gs_logic.sb_tlm_offset_value = v
         self.gs_logic.save_offsets()
 
     def init_routing_service(self):
@@ -325,19 +308,17 @@ class NextGenGroundSystem(QMainWindow):
 
     def on_ip_list_updated(self, ip, name):
         self.gs_logic.update_ip_list(ip, name)
-        self.cb_ip_addresses.addItem(ip)
+        self.cb_ips.addItem(ip)
 
-    def closeEvent(self, event):
+    def closeEvent(self, ev):
         self.gs_logic.stop_cmd_system()
         if self.gs_logic.routing_service:
             self.gs_logic.routing_service.stop()
         os.kill(0, signal.SIGKILL)
-        super().closeEvent(event)
-
+        super().closeEvent(ev)
 
 def main():
-    from _version import __version__ as _version
-    from _version import _version_string
+    from _version import __version__, _version_string
     print(_version_string)
     app = QApplication(sys.argv)
     window = NextGenGroundSystem()
