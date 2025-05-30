@@ -26,7 +26,7 @@ import zmq
 from PyQt5.QtCore import QThread, pyqtSignal
 
 # Receive port where the CFS TO_Lab app sends the telemetry packets
-udp_recv_port = 50001
+udp_recv_port = 1234
 
 
 #
