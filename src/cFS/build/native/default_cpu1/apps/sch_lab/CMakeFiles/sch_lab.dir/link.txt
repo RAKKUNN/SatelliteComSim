@@ -1,1 +1,0 @@
-/usr/bin/cc -fPIC -g -shared  -o sch_lab.so CMakeFiles/sch_lab.dir/fsw/src/sch_lab_app.c.o 

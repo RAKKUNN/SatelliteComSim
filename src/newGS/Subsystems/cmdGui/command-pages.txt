@@ -39,4 +39,3 @@ Time Services (CPU1),       cfe__time__msg_8h,  0x1805, LE, UdpCommands.py,  127
 Event Services (CPU1),      cfe__evs__msg_8h,   0x1801, LE, UdpCommands.py,  127.0.0.1,   50000
 Command Ingest LAB,         ci_lab_msg,         0x1884, LE, UdpCommands.py,  127.0.0.1,   50000
 Telemetry Output LAB,       to_lab_msg,         0x1880, LE, UdpCommands.py,  127.0.0.1,   50000
-Sample App Text Send, sample_app_send_text_gui.py, 0x18A8, LE, cmdGui, 127.0.0.1, 50000

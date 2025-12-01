@@ -1,2 +1,0 @@
-/usr/bin/ar qc libport_notimpl.a CMakeFiles/port_notimpl.dir/cfe_psp_port_notimpl.c.o
-/usr/bin/ranlib libport_notimpl.a

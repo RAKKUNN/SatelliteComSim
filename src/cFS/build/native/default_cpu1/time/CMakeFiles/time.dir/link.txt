@@ -1,2 +1,0 @@
-/usr/bin/ar qc libtime.a CMakeFiles/time.dir/fsw/src/cfe_time_api.c.o CMakeFiles/time.dir/fsw/src/cfe_time_task.c.o CMakeFiles/time.dir/fsw/src/cfe_time_tone.c.o CMakeFiles/time.dir/fsw/src/cfe_time_utils.c.o CMakeFiles/time.dir/fsw/src/cfe_time_dispatch.c.o
-/usr/bin/ranlib libtime.a

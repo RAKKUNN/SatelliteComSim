@@ -1,75 +1,126 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""
-test3.py: cFS에서 들어오는 sample_app 메시지(MID=0x08A9)만 필터링하여
-프리앰블(0xAA, 0xAA)을 붙인 뒤 GMSK 변조하여
-UDP(8890)로 송신합니다. sample_app 본문은 더 이상 자르지 않고 CCSDS 전체 패킷을 전송합니다.
-"""
 
-import socket
-import time
-import struct
-import numpy as np
-from gnuradio import gr, blocks, digital
+import socket, struct, csv
+from pathlib import Path
+from datetime import datetime
 
-CFS_LISTEN_IP    = "0.0.0.0"
-CFS_LISTEN_PORT  = 1235
-GMSK_SEND_IP     = "127.0.0.1"
-GMSK_SEND_PORT   = 8890
-SAMPLE_APP_MID   = 0x08A9
+LISTEN_IP, LISTEN_PORT = "0.0.0.0", 8890
 
-class GMSKModulator(gr.top_block):
-    def __init__(self, data_bytes):
-        super().__init__()
-        self.src = blocks.vector_source_b(data_bytes, False)
-        self.mod = digital.gmsk_mod(samples_per_symbol=2)
-        self.sink = blocks.vector_sink_c()
-        self.connect(self.src, self.mod)
-        self.connect(self.mod, self.sink)
+# ---- 필터: SAMPLE_APP 텍스트 텔레메트리 후보 ----
+FILTER_SID = {0x08A9, 0x1882}   # Stream ID로 보이는 값들
+FILTER_APID = {0x0882, 0x08A9}  # APID로 보이는 값들
 
-    def get_modulated_data(self):
-        return self.sink.data()
+ROOTDIR = Path(__file__).resolve().parent
+LOG_DIR = ROOTDIR / "log"; LOG_DIR.mkdir(parents=True, exist_ok=True)
+RECV_CSV = LOG_DIR / "sample_app_recv.csv"
 
-def get_msg_id(data):
-    if len(data) < 2:
-        return None
-    return struct.unpack_from(">H", data, 0)[0]
+def now_ts(): return datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+
+def ensure_csv_header(p, hdr):
+    if (not p.exists()) or p.stat().st_size == 0:
+        with open(p, "w", newline="", encoding="utf-8") as f:
+            csv.writer(f).writerow(hdr)
+
+def to_hex(b): return "".join(f"{x:02X}" for x in b)
+def bytes_to_bits(b): return "".join(f"{x:08b}" for x in b)
+
+def parse_ccsds_header(pkt):
+    if len(pkt) < 6: return None
+    (sid, seq, length) = struct.unpack(">HHH", pkt[:6])
+    apid = sid & 0x07FF
+    return {"sid": sid, "apid": apid, "seq": seq, "len": length, "total_len": length + 7}
+
+def is_sample_text(hdr):
+    sid = hdr["sid"]; apid = hdr["apid"]
+    return (sid in FILTER_SID) or (apid in FILTER_APID)
+
+def extract_text(pkt: bytes) -> str:
+    """
+    SAMPLE_APP Text TLM을 두 포맷으로 시도:
+    A) [12:14]=TextLen, [14:]=Text(최대128)
+    B) [8: ] 문자열 (예: "ID:message")
+    """
+    # A 포맷
+    if len(pkt) >= 14:
+        try:
+            text_len = (pkt[12] << 8) | pkt[13]
+            text_raw = pkt[14:14+min(128, len(pkt)-14)]
+            text = text_raw.split(b"\x00", 1)[0].decode("utf-8", errors="ignore")
+            # text_len 보정
+            if text_len > len(text):
+                text_len = len(text)
+            if text:
+                return text[:text_len] if text_len else text
+        except Exception:
+            pass
+    # B 포맷
+    if len(pkt) > 8:
+        try:
+            text = pkt[8:].replace(b"\x00", b"").decode("utf-8", errors="ignore")
+            # 너무 지저분하면 간단히 ':' 포함 여부로 거르기
+            if ":" in text:
+                return text.strip()
+        except Exception:
+            pass
+    return ""
+
+def split_id_text(text: str):
+    sid = ""
+    body = text
+    parts = text.split(":", 1)
+    if len(parts) == 2 and parts[0].isdigit():
+        sid, body = parts[0], parts[1]
+    return sid, body
 
 def main():
-    sock_recv = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
-    sock_recv.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
-    sock_recv.bind((CFS_LISTEN_IP, CFS_LISTEN_PORT))
+    ensure_csv_header(RECV_CSV, [
+        "ts","direction","id","text","sid_hex","apid_hex","cc_dec","len",
+        "src_ip","src_port","head_hex16","text_hex","bits"
+    ])
 
-    sock_send = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.bind((LISTEN_IP, LISTEN_PORT))
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 4*1024*1024)
 
-    print(f"[test3.py] Listening for cFS on {CFS_LISTEN_IP}:{CFS_LISTEN_PORT} ...")
+    print(f"[test3] Listening from test4 on {LISTEN_IP}:{LISTEN_PORT} ...")
+    print(f"[test3] Showing only SAMPLE_APP Text TLM (sid in {sorted(FILTER_SID)}, apid in {sorted(FILTER_APID)})")
 
     while True:
-        data, addr = sock_recv.recvfrom(4096)
-        msg_id = get_msg_id(data)
-
-        if msg_id != SAMPLE_APP_MID:
+        data, addr = sock.recvfrom(4096)
+        src_ip, src_port = addr
+        hdr = parse_ccsds_header(data)
+        if not hdr: 
             continue
 
-        print(f"[test3.py] Received sample_app packet ({len(data)} bytes) from {addr}")
+        # cc (function code 추정)
+        cc = data[6] if len(data) > 6 else None
+        head_hex16 = " ".join(f"{b:02X}" for b in data[:16])
 
-        # 전체 CCSDS 패킷을 그대로 사용
-        preamble = [0xAA, 0xAA]
-        orig_bytes = list(data)  # 자르지 않음
-        packet_bytes = preamble + orig_bytes
+        # SAMPLE_APP 텍스트만 통과
+        if not is_sample_text(hdr):
+            continue
 
-        tb = GMSKModulator(packet_bytes)
-        tb.start()
-        time.sleep(0.1)
-        tb.stop()
-        tb.wait()
+        # 텍스트 추출
+        text = extract_text(data)
+        sid_str, text_body = split_id_text(text)
 
-        complex_samples = tb.get_modulated_data()
-        complex_array   = np.array(complex_samples, dtype=np.complex64)
-        mod_bytes       = complex_array.tobytes()
+        # 콘솔 출력
+        print(f"[test3] [TEXT] {now_ts()} sid=0x{hdr['sid']:04X} apid=0x{hdr['apid']:04X} cc={(cc if cc is not None else -1)} text={text!r}")
 
-        sock_send.sendto(mod_bytes, (GMSK_SEND_IP, GMSK_SEND_PORT))
-        print(f"[test3.py] Sent {len(mod_bytes)} bytes to {GMSK_SEND_IP}:{GMSK_SEND_PORT}")
+        # CSV 기록
+        text_bytes = text_body.encode("utf-8", errors="ignore")
+        text_hex   = to_hex(text_bytes)
+        bits = bytes_to_bits(text_bytes)
+        if bits: bits = "b:" + bits
+
+        with open(RECV_CSV, "a", newline="", encoding="utf-8") as f:
+            csv.writer(f).writerow([
+                now_ts(), "recv", sid_str, text_body,
+                f"0x{hdr['sid']:04X}", f"0x{hdr['apid']:04X}",
+                (cc if cc is not None else ""), len(data),
+                src_ip, src_port, head_hex16, text_hex, bits
+            ])
 
 if __name__ == "__main__":
     main()

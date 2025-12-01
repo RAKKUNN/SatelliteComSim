@@ -1,0 +1,1 @@
+/usr/bin/gcc -fPIC -g  -shared  -o to_lab.so CMakeFiles/to_lab.dir/fsw/src/to_lab_app.c.o 

@@ -1,8 +1,0 @@
-/exe/cpu1/cf/cfe_es_startup.scr
-/exe/cpu1/cf/ci_lab.so
-/exe/cpu1/cf/to_lab.so
-/exe/cpu1/cf/sch_lab.so
-/exe/cpu1/cf/cfe_assert.so
-/exe/cpu1/cf/sample_app.so
-/exe/cpu1/cf/sample_lib.so
-/exe/cpu1/core-cpu1

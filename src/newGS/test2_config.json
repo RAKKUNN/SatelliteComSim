@@ -1,0 +1,17 @@
+{
+  "listen_ip": "0.0.0.0",
+  "listen_port": 8600,
+  "dst_ip": "127.0.0.1",
+  "dst_port": 1234,
+  "mtu": 1472,
+  "ctrl_bind_ip": "127.0.0.1",
+  "ctrl_port": 9696,
+  "base_delay_ms": 0.0,
+  "jitter_ms": 0.0,
+  "ber": 0.0,
+  "seed": 48879,
+  "mode": "payload_only",
+  "tlm08a9_len_off": 12,
+  "tlm08a9_text_off": 14,
+  "tlm08a9_text_max": 128
+}

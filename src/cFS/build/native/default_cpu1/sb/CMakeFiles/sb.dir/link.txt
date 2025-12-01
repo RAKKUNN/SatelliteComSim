@@ -1,2 +1,0 @@
-/usr/bin/ar qc libsb.a CMakeFiles/sb.dir/fsw/src/cfe_sb_api.c.o CMakeFiles/sb.dir/fsw/src/cfe_sb_buf.c.o CMakeFiles/sb.dir/fsw/src/cfe_sb_init.c.o CMakeFiles/sb.dir/fsw/src/cfe_sb_msg_id_util.c.o CMakeFiles/sb.dir/fsw/src/cfe_sb_priv.c.o CMakeFiles/sb.dir/fsw/src/cfe_sb_dispatch.c.o CMakeFiles/sb.dir/fsw/src/cfe_sb_task.c.o CMakeFiles/sb.dir/fsw/src/cfe_sb_util.c.o
-/usr/bin/ranlib libsb.a

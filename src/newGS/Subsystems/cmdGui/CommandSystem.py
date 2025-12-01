@@ -5,6 +5,12 @@ CommandSystem.py
 
 - GroundSystem 명령 GUI를 제공하는 모듈입니다.
 - cFS로 명령을 전송할 수 있으며, Quick Command 기능도 포함합니다.
+
+수정사항(2025-10-30):
+- Sample App Text GUI 실행 분기 조건을 유연화(대소문자/공백/부가 라벨에 덜 민감).
+- GUI 실행 시 sys.executable 사용.
+- sample_app_send_text_gui.py 경로 절대경로화 및 존재 여부 체크, 에러 표시.
+- 실행 경로/분기 로그 출력 강화.
 """
 
 import csv
@@ -12,22 +18,20 @@ import pickle
 import shlex
 import subprocess
 import sys
-import threading
-import time
 from pathlib import Path
 from datetime import datetime
 
 from PyQt5.QtCore import Qt
 from PyQt5.QtWidgets import (
     QApplication, QDialog, QHeaderView, QPushButton,
-    QTableWidgetItem, QWidget, QVBoxLayout, QHBoxLayout,
-    QLabel, QTableWidget, QMessageBox, QGroupBox, QTextEdit
+    QTableWidgetItem, QWidget, QMessageBox
 )
 
 from MiniCmdUtil import MiniCmdUtil
 from UiCommandsystemdialog import UiCommandsystemdialog
 
-ROOTDIR = Path(sys.argv[0]).resolve().parent
+# 이 파일 위치 기준 (…/Subsystems/cmdGui)
+ROOTDIR = Path(__file__).resolve().parent  # 기존: Path(sys.argv[0]).resolve().parent
 
 # --------------------------------------------------------------------------------
 # -- CommandSystem 클래스
@@ -39,39 +43,65 @@ class CommandSystem(QDialog, UiCommandsystemdialog):
         self.move(800, 100)
         self.mcu = None
 
-        # TelemetryListener는 더 이상 사용하지 않습니다.
+        # 더 이상 TelemetryListener는 사용하지 않음
         self.telemetry_listener = None
 
+    # -------- 내부 유틸 --------
+    def _launch_sample_app_text_gui(self, caller: str):
+        """
+        sample_app_send_text_gui.py 실행 (경로·실행자 안전화)
+        """
+        gui_path = (ROOTDIR / "sample_app_send_text_gui.py").resolve()
+        if not gui_path.is_file():
+            QMessageBox.critical(
+                self, "Error",
+                f"sample_app_send_text_gui.py not found:\n{gui_path}"
+            )
+            print(f"[ERROR] GUI script not found: {gui_path}")
+            return
+
+        try:
+            print(f"[INFO] Launching SAMPLE_APP Text GUI ({caller}): {sys.executable} {gui_path}")
+            subprocess.Popen([sys.executable, str(gui_path)])
+            with open(ROOTDIR / "SentCommandLogs.txt", "a", encoding="utf-8") as logf:
+                logf.write(f"[{datetime.now()}] GUI Opened for SAMPLE_APP Text Send ({caller})\n")
+        except Exception as e:
+            QMessageBox.critical(self, "Error", f"Failed to launch GUI:\n{e}")
+            print(f"[ERROR] Failed to launch GUI: {e}")
+
+    # -------- Display Page 버튼 --------
     def process_button_generic(self, idx):
         """
         [Display Page] 버튼 클릭 시 호출됩니다.
-        만약 'Sample App' 계열 명령이면 해당 GUI를 호출하고,
-        그렇지 않으면 기존 방식대로 cFS 명령 GUI를 실행합니다.
+        'Sample App' 계열이면 텍스트 GUI를 실행하고,
+        아니면 기존 방식대로 파라미터 GUI/명령 GUI를 실행합니다.
         """
-        if cmd_page_is_valid[idx]:
-            app_name = self.tbl_cmd_sys.item(idx, 0).text().strip()
+        if not cmd_page_is_valid[idx]:
+            return
 
-            # Sample App 텍스트 GUI 호출
-            if app_name in ["Sample App", "Sample App (CPU1)", "Sample App Text Send"]:
-                gui_path = ROOTDIR / "sample_app_send_text_gui.py"
-                subprocess.Popen(["python3", str(gui_path)])
+        raw_name = self.tbl_cmd_sys.item(idx, 0).text()
+        app_name = (raw_name or "").strip()
+        app_name_l = app_name.lower()
+        print(f"[DEBUG] Display Page clicked: idx={idx}, name={app_name!r}")
 
-                # 로그에 기록
-                with open(ROOTDIR / "SentCommandLogs.txt", "a", encoding="utf-8") as logf:
-                    logf.write(f"[{datetime.now()}] GUI Opened for SAMPLE_APP Text Send (via Display Page)\n")
-                return
+        # --- Sample App 텍스트 GUI 분기 (라벨이 조금 달라도 허용) ---
+        # 예: "Sample App", "Sample App (CPU1)", "Sample App Text Send", 등
+        if ("sample app" in app_name_l) and (("text" in app_name_l) or ("send" in app_name_l) or ("sample app" == app_name_l)):
+            self._launch_sample_app_text_gui("via Display Page")
+            return
 
-            # 기본 명령 GUI 로직 (기존 코드 유지)
-            pkt_id = self.tbl_cmd_sys.item(idx, 1).text()
-            address = self.tbl_cmd_sys.item(idx, 2).text()
-            launch_string = (
-                f'python3 {ROOTDIR}/{cmdClass[idx]} '
-                f'--title="{cmdPageDesc[idx]}" --pktid={pkt_id} '
-                f'--file={cmdPageDefFile[idx]} --address="{address}" '
-                f'--port={cmdPagePort[idx]} --endian={cmdPageEndian[idx]}'
-            )
-            cmd_args = shlex.split(launch_string)
-            subprocess.Popen(cmd_args)
+        # --- 기본 명령 GUI 로직 (기존) ---
+        pkt_id = self.tbl_cmd_sys.item(idx, 1).text()
+        address = self.tbl_cmd_sys.item(idx, 2).text()
+        launch_string = (
+            f'{sys.executable} {ROOTDIR}/{cmdClass[idx]} '
+            f'--title="{cmdPageDesc[idx]}" --pktid={pkt_id} '
+            f'--file={cmdPageDefFile[idx]} --address="{address}" '
+            f'--port={cmdPagePort[idx]} --endian={cmdPageEndian[idx]}'
+        )
+        print(f"[INFO] Launching command GUI: {launch_string}")
+        cmd_args = shlex.split(launch_string)
+        subprocess.Popen(cmd_args)
 
     @staticmethod
     def check_params(idx):
@@ -86,47 +116,55 @@ class CommandSystem(QDialog, UiCommandsystemdialog):
         except IOError:
             return False
 
+    # -------- Quick Command 버튼 --------
     def process_quick_button(self, idx):
         """
         Quick Button 클릭 시 호출됩니다.
-        Sample App 계열이면 해당 GUI를 호출하고,
-        그렇지 않으면 파라미터 유무에 따라 MiniCmdUtil을 통해 명령을 전송합니다.
+        Sample App 텍스트라면 GUI를 실행하고,
+        아니라면 파라미터 유무에 따라 MiniCmdUtil 또는 파라미터 GUI 실행.
         """
-        if cmd_page_is_valid[idx] and quick_indices[idx] >= 0:
-            q_idx = quick_indices[idx]
-            pkt_id = self.tbl_cmd_sys.item(idx, 1).text()
-            address = self.tbl_cmd_sys.item(idx, 2).text()
+        if not (cmd_page_is_valid[idx] and quick_indices[idx] >= 0):
+            return
 
-            # Sample App 텍스트 GUI 호출 (Quick Command)
-            if subsys[q_idx] in ["Sample App", "Sample App Text Send"] and quick_cmd[q_idx] == "Send Text":
-                gui_path = ROOTDIR / "sample_app_send_text_gui.py"
-                subprocess.Popen(["python3", str(gui_path)])
-                with open(ROOTDIR / "SentCommandLogs.txt", "a", encoding="utf-8") as logf:
-                    logf.write(f"[{datetime.now()}] GUI Opened for SAMPLE_APP Text Send (via Quick Command)\n")
-                return
+        q_idx = quick_indices[idx]
+        pkt_id = self.tbl_cmd_sys.item(idx, 1).text()
+        address = self.tbl_cmd_sys.item(idx, 2).text()
 
-            # 파라미터가 필요한 경우
-            if self.check_params(q_idx):
-                launch_string = (
-                    f'python3 {ROOTDIR}/Parameter.py '
-                    f'--title="{subsys[q_idx]}" '
-                    f'--descrip="{quick_cmd[q_idx]}" '
-                    f'--idx={idx} --host="{address}" '
-                    f'--port={quick_port[q_idx]} '
-                    f'--pktid={pkt_id} --endian={quick_endian[q_idx]} '
-                    f'--cmdcode={quick_code[q_idx]} --file={quick_param[q_idx]}'
-                )
-                cmd_args = shlex.split(launch_string)
-                subprocess.Popen(cmd_args)
-            else:
-                self.mcu = MiniCmdUtil(
-                    address, quick_port[q_idx],
-                    quick_endian[q_idx], pkt_id,
-                    quick_code[q_idx]
-                )
-                send_success = self.mcu.send_packet()
-                print("Command sent successfully:", send_success)
+        name = (subsys[q_idx] or "").strip().lower()
+        quick_label = (quick_cmd[q_idx] or "").strip().lower()
+        print(f"[DEBUG] Quick button clicked: idx={idx}, subsys={name!r}, quick_cmd={quick_label!r}")
 
+        # Sample App Text GUI (유연한 조건)
+        need_text_gui = (("sample app" in name) and (("text" in name) or (quick_label == "send text")))
+        if need_text_gui:
+            self._launch_sample_app_text_gui("via Quick Command")
+            return
+
+        # 파라미터 파일이 있으면 Parameter.py로 실행
+        if self.check_params(q_idx):
+            launch_string = (
+                f'{sys.executable} {ROOTDIR}/Parameter.py '
+                f'--title="{subsys[q_idx]}" '
+                f'--descrip="{quick_cmd[q_idx]}" '
+                f'--idx={idx} --host="{address}" '
+                f'--port={quick_port[q_idx]} '
+                f'--pktid={pkt_id} --endian={quick_endian[q_idx]} '
+                f'--cmdcode={quick_code[q_idx]} --file={quick_param[q_idx]}'
+            )
+            print(f"[INFO] Launching parameter GUI: {launch_string}")
+            cmd_args = shlex.split(launch_string)
+            subprocess.Popen(cmd_args)
+        else:
+            # 바로 전송
+            self.mcu = MiniCmdUtil(
+                address, quick_port[q_idx],
+                quick_endian[q_idx], pkt_id,
+                quick_code[q_idx]
+            )
+            send_success = self.mcu.send_packet()
+            print("Command sent successfully:", send_success)
+
+    # -------- 텔레메트리 실행 --------
     def on_start_telemetry(self):
         """
         “Start Telemetry” 버튼 클릭 시 호출됩니다.
@@ -142,21 +180,17 @@ class CommandSystem(QDialog, UiCommandsystemdialog):
         if selected_spacecraft != 'All':
             subscription += f'.{selected_spacecraft}.TelemetryPackets'
         args = shlex.split(
-            f'python3 {ROOTDIR}/Subsystems/tlmGUI/TelemetrySystem.py {subscription}'
+            f'{sys.executable} {ROOTDIR}/Subsystems/tlmGUI/TelemetrySystem.py {subscription}'
         )
         subprocess.Popen(args)
-
-        # 메인 로그 창에 메시지
         self.log_output.append(f"<font color='blue'>[시스템] Telemetry System Started</font>")
 
+    # -------- 기타 UI 핸들러(원본 유지) --------
     def start_cmd_system(self, on_stdout_callback=None):
-        """
-        명령 시스템(자체 CommandSystem 프로세스)을 실행합니다.
-        """
         if self.cmd_process and self.cmd_process.poll() is None:
             self.display_error_message("Command System is already running.")
             return
-        cmd = ['python3', '-u', f'{ROOTDIR}/Subsystems/cmdGui/CommandSystem.py']
+        cmd = [sys.executable, '-u', f'{ROOTDIR}/Subsystems/cmdGui/CommandSystem.py']
         self.cmd_process = subprocess.Popen(
             cmd, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
             text=True, bufsize=1
@@ -168,9 +202,6 @@ class CommandSystem(QDialog, UiCommandsystemdialog):
         self.log_output.append(f"<font color='blue'>[시스템] Command System Started</font>")
 
     def on_cmd_header_changed(self, txt):
-        """
-        명령 헤더가 변경되면 호출됩니다.
-        """
         self.gs_logic.set_cmd_offsets(txt)
         self.sb_cmd_pri.setEnabled(txt == "Custom")
         self.sb_cmd_sec.setEnabled(txt == "Custom")
@@ -179,39 +210,24 @@ class CommandSystem(QDialog, UiCommandsystemdialog):
         self.gs_logic.save_offsets()
 
     def on_cmd_offset_pri_changed(self, v):
-        """
-        우선순위 오프셋 변경 시 호출됩니다.
-        """
         self.gs_logic.sb_cmd_offset_pri_value = v
         self.gs_logic.save_offsets()
 
     def on_cmd_offset_sec_changed(self, v):
-        """
-        세컨드 오프셋 변경 시 호출됩니다.
-        """
         self.gs_logic.sb_cmd_offset_sec_value = v
         self.gs_logic.save_offsets()
 
     def on_tlm_header_changed(self, txt):
-        """
-        텔레메트리 헤더가 변경되면 호출됩니다.
-        """
         self.gs_logic.set_tlm_offset(txt)
         self.sb_tlm_offset.setEnabled(txt == "Custom")
         self.sb_tlm_offset.setValue(self.gs_logic.sb_tlm_offset_value)
         self.gs_logic.save_offsets()
 
     def on_tlm_offset_changed(self, v):
-        """
-        텔레메트리 오프셋 변경 시 호출됩니다.
-        """
         self.gs_logic.sb_tlm_offset_value = v
         self.gs_logic.save_offsets()
 
     def clear_cmd_log(self):
-        """
-        커맨드 로그를 초기화합니다.
-        """
         self.log_output.clear()
         self.log_output.append(f"<font color='blue'>[시스템] 커맨드 로그가 초기화되었습니다.</font>")
 
@@ -219,22 +235,13 @@ class CommandSystem(QDialog, UiCommandsystemdialog):
         QMessageBox.warning(self, "Error", msg)
 
     def append_terminal_output(self, msg: str):
-        """
-        터미널 출력 로그를 로그 창에 추가합니다.
-        """
         color = "blue" if msg.startswith("[시스템]") else "red" if msg.startswith("[공격]") else "black"
         self.log_output.append(f"<font color='{color}'>{msg}</font>")
 
     def on_start_tlm(self):
-        """
-        UI에서 “Start Telemetry” 버튼과 연결된 슬롯입니다.
-        """
         self.on_start_telemetry()
 
     def closeEvent(self, ev):
-        """
-        프로그램 종료 시 호출됩니다.
-        """
         if self.mcu:
             try:
                 self.mcu.mm.close()

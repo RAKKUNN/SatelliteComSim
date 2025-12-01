@@ -1,2 +1,0 @@
-/usr/bin/ar qc libeeprom_mmap_file.a CMakeFiles/eeprom_mmap_file.dir/cfe_psp_eeprom_mmap_file.c.o
-/usr/bin/ranlib libeeprom_mmap_file.a

@@ -1,2 +1,0 @@
-/usr/bin/ar qc libtblobj_cpu1_sample_app.tbl7dfe5c3adb288c11976a8c96454fb3a99c97dc29.a CMakeFiles/tblobj_cpu1_sample_app.tbl7dfe5c3adb288c11976a8c96454fb3a99c97dc29.dir/fsw/tables/sample_app_tbl.c.o
-/usr/bin/ranlib libtblobj_cpu1_sample_app.tbl7dfe5c3adb288c11976a8c96454fb3a99c97dc29.a

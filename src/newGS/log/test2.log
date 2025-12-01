@@ -1,0 +1,144 @@
+log :warning: `socket_pdu` has moved to gr-network and will be removed from gr-blocks soon. Please update to use network.socket_pdu()
+log :warning: `socket_pdu` has moved to gr-network and will be removed from gr-blocks soon. Please update to use network.socket_pdu()
+[test2] Listening UDP PDU on 0.0.0.0:8600
+[test2] Forwarding UDP PDU to 127.0.0.1:1234
+[test2] MTU=1472
+[IN ] 2025-10-31 00:03:46 len=8 mid=0x1880 apid=0x0080 cc=0
+[IN ] head16=18 80 C0 00 00 01 00 A6
+[IN ] text='........'
+[IN ] 2025-10-31 00:03:46 len=8 mid=0x1880 apid=0x0080 cc=6
+[IN ] head16=18 80 C0 00 00 01 06 A0
+[IN ] text='........'
+[IN ] 2025-10-31 00:03:46 len=16 mid=0x1880 apid=0x0080 cc=2
+[IN ] head16=18 80 C0 00 00 09 02 09 A9 08 00 00 00 00 04 00
+[IN ] text='................'
+[FWD] 2025-10-31 00:03:46 len=8 mid=0x1880 apid=0x0080 cc=0
+[FWD] head16=18 80 C0 00 00 01 00 A6
+[FWD] text='........'
+[FWD] 2025-10-31 00:03:46 len=8 mid=0x1880 apid=0x0080 cc=6
+[FWD] head16=18 80 C0 00 00 01 06 A0
+[FWD] text='........'
+[FWD] 2025-10-31 00:03:46 len=16 mid=0x1880 apid=0x0080 cc=2
+[FWD] head16=18 80 C0 00 00 09 02 09 A9 08 00 00 00 00 04 00
+[FWD] text='................'
+[IN ] 2025-10-31 00:03:57 len=136 mid=0x1882 apid=0x0082 cc=3
+[IN ] head16=18 82 C0 00 00 81 03 5C 33 3A 6C 6B 6A 68 67 66
+[IN ] text='.......\3:lkjhgfdsa.............................................'
+[FWD] 2025-10-31 00:03:57 len=136 mid=0x1882 apid=0x0082 cc=3
+[FWD] head16=18 82 C0 00 00 81 03 5C 33 3A 6C 6B 6A 68 67 66
+[FWD] text='.......\3:lkjhgfdsa.............................................'
+log :warning: `socket_pdu` has moved to gr-network and will be removed from gr-blocks soon. Please update to use network.socket_pdu()
+log :warning: `socket_pdu` has moved to gr-network and will be removed from gr-blocks soon. Please update to use network.socket_pdu()
+[test2] Listening UDP PDU on 0.0.0.0:8600
+[test2] Forwarding UDP PDU to 127.0.0.1:1234
+[test2] MTU=1472
+[test2] Space channel: delay=0.0ms±0.0ms, BER=0.0 (payload-only BER)
+log :warning: `socket_pdu` has moved to gr-network and will be removed from gr-blocks soon. Please update to use network.socket_pdu()
+log :warning: `socket_pdu` has moved to gr-network and will be removed from gr-blocks soon. Please update to use network.socket_pdu()
+[test2] Listening UDP PDU on 0.0.0.0:8600
+[test2] Forwarding UDP PDU to 127.0.0.1:1234
+[test2] MTU=1472
+[test2] Space channel: delay=0.0ms±0.0ms, BER=0.0 (payload-only BER)
+[IN ] 2025-10-31 00:31:28 len=8 mid=0x1880 apid=0x0080 cc=0
+[IN ] head16=18 80 C0 00 00 01 00 A6
+[IN ] text='........'
+[IN ] 2025-10-31 00:31:28 len=8 mid=0x1880 apid=0x0080 cc=6
+[IN ] head16=18 80 C0 00 00 01 06 A0
+[IN ] text='........'
+[IN ] 2025-10-31 00:31:28 len=16 mid=0x1880 apid=0x0080 cc=2
+[IN ] head16=18 80 C0 00 00 09 02 09 A9 08 00 00 00 00 04 00
+[IN ] text='................'
+[FWD] 2025-10-31 00:31:28 len=8 mid=0x1880 apid=0x0080 cc=0
+[FWD] head16=18 80 C0 00 00 01 00 A6
+[FWD] text='........'
+[FWD] 2025-10-31 00:31:28 len=8 mid=0x1880 apid=0x0080 cc=6
+[FWD] head16=18 80 C0 00 00 01 06 A0
+[FWD] text='........'
+[FWD] 2025-10-31 00:31:28 len=16 mid=0x1880 apid=0x0080 cc=2
+[FWD] head16=18 80 C0 00 00 09 02 09 A9 08 00 00 00 00 04 00
+[FWD] text='................'
+[IN ] 2025-10-31 00:31:43 len=136 mid=0x1882 apid=0x0082 cc=3
+[IN ] head16=18 82 C0 00 00 81 03 48 34 3A 61 61 61 61 61 61
+[IN ] text='.......H4:aaaaaaaaa.............................................'
+[FWD] 2025-10-31 00:31:43 len=136 mid=0x1882 apid=0x0082 cc=3
+[FWD] head16=18 82 C0 00 00 81 03 48 34 3A 61 61 61 61 61 61
+[FWD] text='.......H4:aaaaaaaaa.............................................'
+[IN ] 2025-10-31 00:31:46 len=136 mid=0x1882 apid=0x0082 cc=3
+[IN ] head16=18 82 C0 00 00 81 03 28 35 3A 76 76 76 76 76 76
+[IN ] text='.......(5:vvvvvvvvvvvvvv........................................'
+[FWD] 2025-10-31 00:31:46 len=136 mid=0x1882 apid=0x0082 cc=3
+[FWD] head16=18 82 C0 00 00 81 03 28 35 3A 76 76 76 76 76 76
+[FWD] text='.......(5:vvvvvvvvvvvvvv........................................'
+[IN ] 2025-10-31 00:31:48 len=136 mid=0x1882 apid=0x0082 cc=3
+[IN ] head16=18 82 C0 00 00 81 03 48 36 3A 63 63 63 63 63 63
+[IN ] text='.......H6:ccccccccccccc.........................................'
+[FWD] 2025-10-31 00:31:48 len=136 mid=0x1882 apid=0x0082 cc=3
+[FWD] head16=18 82 C0 00 00 81 03 48 36 3A 63 63 63 63 63 63
+[FWD] text='.......H6:ccccccccccccc.........................................'
+[IN ] 2025-10-31 00:32:17 len=136 mid=0x1882 apid=0x0082 cc=3
+[IN ] head16=18 82 C0 00 00 81 03 2A 37 3A 61 61 61 61 61 61
+[IN ] text='.......*7:aaaaaaaaaaaa..........................................'
+[FWD] 2025-10-31 00:32:17 len=136 mid=0x1882 apid=0x0082 cc=3
+[FWD] head16=18 82 C0 00 00 81 03 2A 37 3A 61 61 61 61 61 61
+[FWD] text='.......*7:aaaaaaaaaaaa..........................................'
+[IN ] 2025-10-31 00:32:19 len=136 mid=0x1882 apid=0x0082 cc=3
+[IN ] head16=18 82 C0 00 00 81 03 25 38 3A 61 61 61 61 61 61
+[IN ] text='.......%8:aaaaaaaaaaaa..........................................'
+[FWD] 2025-10-31 00:32:19 len=136 mid=0x1882 apid=0x0082 cc=3
+[FWD] head16=18 82 C0 00 00 81 03 25 38 3A 61 61 61 61 61 61
+[FWD] text='.......%8:aaaaaaaaaaaa..........................................'
+[IN ] 2025-10-31 00:32:20 len=136 mid=0x1882 apid=0x0082 cc=3
+[IN ] head16=18 82 C0 00 00 81 03 24 39 3A 61 61 61 61 61 61
+[IN ] text='.......$9:aaaaaaaaaaaa..........................................'
+[FWD] 2025-10-31 00:32:20 len=136 mid=0x1882 apid=0x0082 cc=3
+[FWD] head16=18 82 C0 00 00 81 03 24 39 3A 61 61 61 61 61 61
+[FWD] text='.......$9:aaaaaaaaaaaa..........................................'
+[IN ] 2025-10-31 00:32:21 len=136 mid=0x1882 apid=0x0082 cc=3
+[IN ] head16=18 82 C0 00 00 81 03 1C 31 30 3A 61 61 61 61 61
+[IN ] text='........10:aaaaaaaaaaaa.........................................'
+[FWD] 2025-10-31 00:32:21 len=136 mid=0x1882 apid=0x0082 cc=3
+[FWD] head16=18 82 C0 00 00 81 03 1C 31 30 3A 61 61 61 61 61
+[FWD] text='........10:aaaaaaaaaaaa.........................................'
+[IN ] 2025-10-31 00:32:22 len=136 mid=0x1882 apid=0x0082 cc=3
+[IN ] head16=18 82 C0 00 00 81 03 1D 31 31 3A 61 61 61 61 61
+[IN ] text='........11:aaaaaaaaaaaa.........................................'
+[FWD] 2025-10-31 00:32:22 len=136 mid=0x1882 apid=0x0082 cc=3
+[FWD] head16=18 82 C0 00 00 81 03 1D 31 31 3A 61 61 61 61 61
+[FWD] text='........11:aaaaaaaaaaaa.........................................'
+[IN ] 2025-10-31 00:32:23 len=136 mid=0x1882 apid=0x0082 cc=3
+[IN ] head16=18 82 C0 00 00 81 03 1E 31 32 3A 61 61 61 61 61
+[IN ] text='........12:aaaaaaaaaaaa.........................................'
+[FWD] 2025-10-31 00:32:23 len=136 mid=0x1882 apid=0x0082 cc=3
+[FWD] head16=18 82 C0 00 00 81 03 1E 31 32 3A 61 61 61 61 61
+[FWD] text='........12:aaaaaaaaaaaa.........................................'
+log :warning: `socket_pdu` has moved to gr-network and will be removed from gr-blocks soon. Please update to use network.socket_pdu()
+log :warning: `socket_pdu` has moved to gr-network and will be removed from gr-blocks soon. Please update to use network.socket_pdu()
+[test2] Listening UDP PDU on 0.0.0.0:8600
+[test2] Forwarding UDP PDU to 127.0.0.1:1234
+[test2] MTU=1472
+[test2] Space channel: delay=0.0ms±0.0ms, BER=0.0 (payload-only BER)
+[CTRL] Listening on 127.0.0.1:9696
+[IN ] 2025-10-31 15:22:02 len=8 mid=0x1880 apid=0x0080 cc=0
+[IN ] head16=18 80 C0 00 00 01 00 A6
+[IN ] text='........'
+[IN ] 2025-10-31 15:22:02 len=8 mid=0x1880 apid=0x0080 cc=6
+[IN ] head16=18 80 C0 00 00 01 06 A0
+[IN ] text='........'
+[IN ] 2025-10-31 15:22:02 len=16 mid=0x1880 apid=0x0080 cc=2
+[FWD] 2025-10-31 15:22:02 len=8 mid=0x1880 apid=0x0080 cc=0
+[FWD] head16=18 80 C0 00 00 01 00 A6
+[FWD] text='........'
+[FWD] 2025-10-31 15:22:02 len=8 mid=0x1880 apid=0x0080 cc=6
+[FWD] head16=18 80 C0 00 00 01 06 A0
+[FWD] text='........'
+[IN ] head16=18 80 C0 00 00 09 02 09 A9 08 00 00 00 00 04 00
+[IN ] text='................'
+[FWD] 2025-10-31 15:22:02 len=16 mid=0x1880 apid=0x0080 cc=2
+[FWD] head16=18 80 C0 00 00 09 02 09 A9 08 00 00 00 00 04 00
+[FWD] text='................'
+[IN ] 2025-10-31 15:22:14 len=136 mid=0x1882 apid=0x0082 cc=3
+[IN ] head16=18 82 C0 00 00 81 03 13 31 33 3A 71 77 65 61 73
+[IN ] text='........13:qweasdzc.............................................'
+[FWD] 2025-10-31 15:22:14 len=136 mid=0x1882 apid=0x0082 cc=3
+[FWD] head16=18 82 C0 00 00 81 03 13 31 33 3A 71 77 65 61 73
+[FWD] text='........13:qweasdzc.............................................'

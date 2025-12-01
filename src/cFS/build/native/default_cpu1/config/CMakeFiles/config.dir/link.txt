@@ -1,2 +1,0 @@
-/usr/bin/ar qc libconfig.a CMakeFiles/config.dir/fsw/src/cfe_config_init.c.o CMakeFiles/config.dir/fsw/src/cfe_config_lookup.c.o CMakeFiles/config.dir/fsw/src/cfe_config_get.c.o CMakeFiles/config.dir/fsw/src/cfe_config_set.c.o CMakeFiles/config.dir/home/vboxuser/SatelliteComSim/src/cFS/build/src/cfe_configid_nametable.c.o CMakeFiles/config.dir/__/src/cfe_platformcfg_tables.c.o
-/usr/bin/ranlib libconfig.a

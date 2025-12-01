@@ -1,2 +1,0 @@
-/usr/bin/ar qc libevs.a CMakeFiles/evs.dir/fsw/src/cfe_evs.c.o CMakeFiles/evs.dir/fsw/src/cfe_evs_log.c.o CMakeFiles/evs.dir/fsw/src/cfe_evs_task.c.o CMakeFiles/evs.dir/fsw/src/cfe_evs_utils.c.o CMakeFiles/evs.dir/fsw/src/cfe_evs_dispatch.c.o
-/usr/bin/ranlib libevs.a

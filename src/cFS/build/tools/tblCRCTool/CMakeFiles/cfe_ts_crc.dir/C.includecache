@@ -1,0 +1,24 @@
+#IncludeRegexLine: ^[ 	]*[#%][ 	]*(include|import)[ 	]*[<"]([^">]+)([">])
+
+#IncludeRegexScan: ^.*$
+
+#IncludeRegexComplain: ^$
+
+#IncludeRegexTransform: 
+
+/home/vboxuser/SatelliteComSim/src/cFS/tools/tblCRCTool/cfe_ts_crc.c
+stdio.h
+-
+fcntl.h
+-
+string.h
+-
+stdlib.h
+-
+unistd.h
+-
+cfe_ts_crc_version.h
+/home/vboxuser/SatelliteComSim/src/cFS/tools/tblCRCTool/cfe_ts_crc_version.h
+
+/home/vboxuser/SatelliteComSim/src/cFS/tools/tblCRCTool/cfe_ts_crc_version.h
+

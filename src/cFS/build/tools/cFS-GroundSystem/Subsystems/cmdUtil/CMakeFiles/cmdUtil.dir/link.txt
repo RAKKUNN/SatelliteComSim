@@ -1,1 +1,1 @@
-/usr/bin/cc -g CMakeFiles/cmdUtil.dir/cmdUtil.c.o CMakeFiles/cmdUtil.dir/SendUdp.c.o -o cmdUtil 
+/usr/bin/cc -g  -rdynamic CMakeFiles/cmdUtil.dir/cmdUtil.c.o CMakeFiles/cmdUtil.dir/SendUdp.c.o  -o cmdUtil 

@@ -1,0 +1,19 @@
+[test3] Listening from test4 on 0.0.0.0:8890 ...
+[test3] Showing only SAMPLE_APP Text TLM (sid in [2217, 6274], apid in [2178, 2217])
+[test3] [TEXT] 2025-10-31 00:03:58 sid=0x08A9 apid=0x00A9 cc=199 text='3:lkjhgfdsa'
+[test3] Listening from test4 on 0.0.0.0:8890 ...
+[test3] Showing only SAMPLE_APP Text TLM (sid in [2217, 6274], apid in [2178, 2217])
+[test3] Listening from test4 on 0.0.0.0:8890 ...
+[test3] Showing only SAMPLE_APP Text TLM (sid in [2217, 6274], apid in [2178, 2217])
+[test3] [TEXT] 2025-10-31 00:31:43 sid=0x08A9 apid=0x00A9 cc=193 text='4:aaaaaaaaa'
+[test3] [TEXT] 2025-10-31 00:31:46 sid=0x08A9 apid=0x00A9 cc=195 text='5:vvvvvvvvvvvvvv'
+[test3] [TEXT] 2025-10-31 00:31:48 sid=0x08A9 apid=0x00A9 cc=198 text='6:ccccccccccccc'
+[test3] [TEXT] 2025-10-31 00:32:18 sid=0x08A9 apid=0x00A9 cc=227 text='7:aaaaaaaaaaaa'
+[test3] [TEXT] 2025-10-31 00:32:19 sid=0x08A9 apid=0x00A9 cc=229 text='8:aaaaaaaaaaaa'
+[test3] [TEXT] 2025-10-31 00:32:20 sid=0x08A9 apid=0x00A9 cc=230 text='9:aaaaaaaaaaaa'
+[test3] [TEXT] 2025-10-31 00:32:21 sid=0x08A9 apid=0x00A9 cc=231 text='10:aaaaaaaaaaaa'
+[test3] [TEXT] 2025-10-31 00:32:22 sid=0x08A9 apid=0x00A9 cc=232 text='11:aaaaaaaaaaaa'
+[test3] [TEXT] 2025-10-31 00:32:24 sid=0x08A9 apid=0x00A9 cc=233 text='12:aaaaaaaaaaaa'
+[test3] Listening from test4 on 0.0.0.0:8890 ...
+[test3] Showing only SAMPLE_APP Text TLM (sid in [2217, 6274], apid in [2178, 2217])
+[test3] [TEXT] 2025-10-31 15:22:14 sid=0x08A9 apid=0x00A9 cc=108 text='13:qweasdzc'

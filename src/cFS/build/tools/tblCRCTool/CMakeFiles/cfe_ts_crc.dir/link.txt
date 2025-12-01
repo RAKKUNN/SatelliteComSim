@@ -1,1 +1,1 @@
-/usr/bin/cc -g CMakeFiles/cfe_ts_crc.dir/cfe_ts_crc.c.o -o cfe_ts_crc 
+/usr/bin/cc -g  -rdynamic CMakeFiles/cfe_ts_crc.dir/cfe_ts_crc.c.o  -o cfe_ts_crc 

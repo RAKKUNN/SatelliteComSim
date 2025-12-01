@@ -1,0 +1,23 @@
+#---------------------------------------------------------------------------
+# Doxygen options to generate the complete mission documentation
+#---------------------------------------------------------------------------
+
+# Start with the common definitions, some of which are extended or overridden here.
+@INCLUDE               = /home/vboxuser/SatelliteComSim/src/cFS/build/doc/cfe-common.doxyfile
+PROJECT_NAME           = "SampleMission"
+PROJECT_BRIEF          = "Core Flight System project built using \"sample\" configuration"
+OUTPUT_DIRECTORY       = detaildesign
+
+INPUT                 += /home/vboxuser/SatelliteComSim/src/cFS/sample_defs  \
+                         /home/vboxuser/SatelliteComSim/src/cFS/osal/src/os/inc \
+                         /home/vboxuser/SatelliteComSim/src/cFS/osal/src/os/shared \
+                         /home/vboxuser/SatelliteComSim/src/cFS/psp/fsw/inc \
+                         /home/vboxuser/SatelliteComSim/src/cFS/psp/fsw/shared \
+                         /home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src
+                         
+STRIP_FROM_PATH       += /home/vboxuser/SatelliteComSim/src/cFS/sample_defs
+
+#---------------------------------------------------------------------------
+# The user content doxyfile contains paths to the mission-specific applications   
+#---------------------------------------------------------------------------
+@INCLUDE               = /home/vboxuser/SatelliteComSim/src/cFS/build/doc/mission-content.doxyfile

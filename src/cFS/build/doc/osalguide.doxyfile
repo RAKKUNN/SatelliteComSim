@@ -1,0 +1,26 @@
+#---------------------------------------------------------------------------
+# Doxygen Configuration options to generate the "OSAL API Guide"
+#---------------------------------------------------------------------------
+
+# Start with the main page so document ordering is established
+INPUT                 += /home/vboxuser/SatelliteComSim/src/cFS/cfe/docs/src/osalmain.dox
+
+# Common definitions, some of which are extended or overridden here.
+@INCLUDE               = /home/vboxuser/SatelliteComSim/src/cFS/build/doc/osal-common.doxyfile
+PROJECT_NAME           = "OSAL User's Guide"
+OUTPUT_DIRECTORY       = osalguide
+GENERATE_LATEX         = YES
+
+#PREDEFINED
+PREDEFINED            += 
+
+# Bring in the cFE header files for the documentation of the various API calls
+INPUT                 += /home/vboxuser/SatelliteComSim/src/cFS/build/doc/osconfig-example.h \
+/home/vboxuser/SatelliteComSim/src/cFS/osal/src/os/inc/common_types.h \
+/home/vboxuser/SatelliteComSim/src/cFS/osal/src/os/inc/osapi-os-core.h \
+/home/vboxuser/SatelliteComSim/src/cFS/osal/src/os/inc/osapi-os-filesys.h \
+/home/vboxuser/SatelliteComSim/src/cFS/osal/src/os/inc/osapi-os-loader.h \
+/home/vboxuser/SatelliteComSim/src/cFS/osal/src/os/inc/osapi-os-net.h \
+/home/vboxuser/SatelliteComSim/src/cFS/osal/src/os/inc/osapi-os-timer.h \
+/home/vboxuser/SatelliteComSim/src/cFS/osal/src/os/inc/osapi-version.h \
+/home/vboxuser/SatelliteComSim/src/cFS/osal/src/os/inc/osapi.h

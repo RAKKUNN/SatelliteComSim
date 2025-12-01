@@ -1,2 +1,0 @@
-/usr/bin/ar qc libsoft_timebase.a CMakeFiles/soft_timebase.dir/cfe_psp_soft_timebase.c.o
-/usr/bin/ranlib libsoft_timebase.a

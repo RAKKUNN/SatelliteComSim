@@ -1,1 +1,0 @@
-/usr/bin/cc -g CMakeFiles/cfeconfig_platformdata_tool.dir/cfeconfig_platformdata_tool.c.o CMakeFiles/cfeconfig_platformdata_tool.dir/__/src/cfe_configid_nametable.c.o CMakeFiles/cfeconfig_platformdata_tool.dir/__/src/cfe_platform_list.c.o CMakeFiles/cfeconfig_platformdata_native_default_cpu1.dir/cfeconfig_platformdata_table.c.o -o cfeconfig_platformdata_tool 

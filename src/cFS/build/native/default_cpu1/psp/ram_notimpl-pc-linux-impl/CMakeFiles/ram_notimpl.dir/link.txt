@@ -1,2 +1,0 @@
-/usr/bin/ar qc libram_notimpl.a CMakeFiles/ram_notimpl.dir/cfe_psp_ram_notimpl.c.o
-/usr/bin/ranlib libram_notimpl.a

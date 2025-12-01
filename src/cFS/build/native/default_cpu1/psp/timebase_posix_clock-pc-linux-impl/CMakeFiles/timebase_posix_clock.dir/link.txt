@@ -1,2 +1,0 @@
-/usr/bin/ar qc libtimebase_posix_clock.a CMakeFiles/timebase_posix_clock.dir/cfe_psp_timebase_posix_clock.c.o
-/usr/bin/ranlib libtimebase_posix_clock.a

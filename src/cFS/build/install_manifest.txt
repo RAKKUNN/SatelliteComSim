@@ -1,6 +1,3 @@
 /exe/host/cmdUtil
-/exe/./cpu1/cf/sample_app_tbl.tbl
-/exe/./cpu1/cf/to_lab_sub.tbl
-/exe/./cpu1/cf/sch_lab_table.tbl
 /exe/host/elf2cfetbl
 /exe/host/cfe_ts_crc

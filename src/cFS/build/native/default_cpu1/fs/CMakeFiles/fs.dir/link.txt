@@ -1,2 +1,0 @@
-/usr/bin/ar qc libfs.a CMakeFiles/fs.dir/fsw/src/cfe_fs_api.c.o CMakeFiles/fs.dir/fsw/src/cfe_fs_priv.c.o
-/usr/bin/ranlib libfs.a

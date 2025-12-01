@@ -1,6 +1,5 @@
 file(REMOVE_RECURSE
   "CMakeFiles/elf2cfetbl.dir/elf2cfetbl.c.o"
-  "CMakeFiles/elf2cfetbl.dir/elf2cfetbl.c.o.d"
   "elf2cfetbl"
   "elf2cfetbl.pdb"
 )

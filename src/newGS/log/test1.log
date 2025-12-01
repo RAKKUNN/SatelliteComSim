@@ -1,0 +1,98 @@
+[2025-10-31 00:03:46] test1 starting…
+[2025-10-31 00:03:46] __file__=/home/vboxuser/SatelliteComSim/src/newGS/test1.py
+[2025-10-31 00:03:46] CSV_PATH=/home/vboxuser/SatelliteComSim/src/newGS/log/sample_app_sent.csv
+[2025-10-31 00:03:46] listening on 0.0.0.0:50000
+[2025-10-31 00:03:46] forwarding to 127.0.0.1:8600
+[2025-10-31 00:03:46] [INIT] running (async): /usr/bin/env bash /home/vboxuser/SatelliteComSim/src/newGS/scripts/setup_tolab_08a9.sh
+[RECV] 127.0.0.1:58589 len=8 mid=0x1880 apid=0x0080 cc=0 head=18 80 C0 00 00 01 00 A6
+[DEBUG] mid/apid check => mid=0x1880, apid=0x0080, cc=0
+[FWD ] -> 127.0.0.1:8600 len=8
+[RECV] 127.0.0.1:48165 len=8 mid=0x1880 apid=0x0080 cc=6 head=18 80 C0 00 00 01 06 A0
+[DEBUG] mid/apid check => mid=0x1880, apid=0x0080, cc=6
+[FWD ] -> 127.0.0.1:8600 len=8
+[RECV] 127.0.0.1:40922 len=16 mid=0x1880 apid=0x0080 cc=2 head=18 80 C0 00 00 09 02 09 A9 08 00 00 00 00 04 00
+[DEBUG] mid/apid check => mid=0x1880, apid=0x0080, cc=2
+[FWD ] -> 127.0.0.1:8600 len=16
+[2025-10-31 00:03:46] [INIT] rc=0
+[INIT][STDOUT]
+[OK] TO_LAB enabled + 0x08A9 registered (limit=4) on 127.0.0.1:50000
+[RECV] 127.0.0.1:35984 len=136 mid=0x1882 apid=0x0082 cc=3 head=18 82 C0 00 00 81 03 5C 33 3A 6C 6B 6A 68 67 66
+[DEBUG] mid/apid check => mid=0x1882, apid=0x0082, cc=3
+[TEXT] 3:lkjhgfdsa
+[FWD ] -> 127.0.0.1:8600 len=136
+[2025-10-31 00:31:28] test1 starting…
+[2025-10-31 00:31:28] __file__=/home/vboxuser/SatelliteComSim/src/newGS/test1.py
+[2025-10-31 00:31:28] CSV_PATH=/home/vboxuser/SatelliteComSim/src/newGS/log/sample_app_sent.csv
+[2025-10-31 00:31:28] listening on 0.0.0.0:50000
+[2025-10-31 00:31:28] forwarding to 127.0.0.1:8600
+[2025-10-31 00:31:28] [INIT] running (async): /usr/bin/env bash /home/vboxuser/SatelliteComSim/src/newGS/scripts/setup_tolab_08a9.sh
+[RECV] 127.0.0.1:55258 len=8 mid=0x1880 apid=0x0080 cc=0 head=18 80 C0 00 00 01 00 A6
+[DEBUG] mid/apid check => mid=0x1880, apid=0x0080, cc=0
+[FWD ] -> 127.0.0.1:8600 len=8
+[RECV] 127.0.0.1:51300 len=8 mid=0x1880 apid=0x0080 cc=6 head=18 80 C0 00 00 01 06 A0
+[DEBUG] mid/apid check => mid=0x1880, apid=0x0080, cc=6
+[FWD ] -> 127.0.0.1:8600 len=8
+[RECV] 127.0.0.1:54563 len=16 mid=0x1880 apid=0x0080 cc=2 head=18 80 C0 00 00 09 02 09 A9 08 00 00 00 00 04 00
+[DEBUG] mid/apid check => mid=0x1880, apid=0x0080, cc=2
+[FWD ] -> 127.0.0.1:8600 len=16
+[2025-10-31 00:31:28] [INIT] rc=0
+[INIT][STDOUT]
+[OK] TO_LAB enabled + 0x08A9 registered (limit=4) on 127.0.0.1:50000
+[RECV] 127.0.0.1:51793 len=136 mid=0x1882 apid=0x0082 cc=3 head=18 82 C0 00 00 81 03 48 34 3A 61 61 61 61 61 61
+[DEBUG] mid/apid check => mid=0x1882, apid=0x0082, cc=3
+[TEXT] 4:aaaaaaaaa
+[FWD ] -> 127.0.0.1:8600 len=136
+[RECV] 127.0.0.1:57162 len=136 mid=0x1882 apid=0x0082 cc=3 head=18 82 C0 00 00 81 03 28 35 3A 76 76 76 76 76 76
+[DEBUG] mid/apid check => mid=0x1882, apid=0x0082, cc=3
+[TEXT] 5:vvvvvvvvvvvvvv
+[FWD ] -> 127.0.0.1:8600 len=136
+[RECV] 127.0.0.1:48431 len=136 mid=0x1882 apid=0x0082 cc=3 head=18 82 C0 00 00 81 03 48 36 3A 63 63 63 63 63 63
+[DEBUG] mid/apid check => mid=0x1882, apid=0x0082, cc=3
+[TEXT] 6:ccccccccccccc
+[FWD ] -> 127.0.0.1:8600 len=136
+[RECV] 127.0.0.1:38230 len=136 mid=0x1882 apid=0x0082 cc=3 head=18 82 C0 00 00 81 03 2A 37 3A 61 61 61 61 61 61
+[DEBUG] mid/apid check => mid=0x1882, apid=0x0082, cc=3
+[TEXT] 7:aaaaaaaaaaaa
+[FWD ] -> 127.0.0.1:8600 len=136
+[RECV] 127.0.0.1:43959 len=136 mid=0x1882 apid=0x0082 cc=3 head=18 82 C0 00 00 81 03 25 38 3A 61 61 61 61 61 61
+[DEBUG] mid/apid check => mid=0x1882, apid=0x0082, cc=3
+[TEXT] 8:aaaaaaaaaaaa
+[FWD ] -> 127.0.0.1:8600 len=136
+[RECV] 127.0.0.1:37719 len=136 mid=0x1882 apid=0x0082 cc=3 head=18 82 C0 00 00 81 03 24 39 3A 61 61 61 61 61 61
+[DEBUG] mid/apid check => mid=0x1882, apid=0x0082, cc=3
+[TEXT] 9:aaaaaaaaaaaa
+[FWD ] -> 127.0.0.1:8600 len=136
+[RECV] 127.0.0.1:56153 len=136 mid=0x1882 apid=0x0082 cc=3 head=18 82 C0 00 00 81 03 1C 31 30 3A 61 61 61 61 61
+[DEBUG] mid/apid check => mid=0x1882, apid=0x0082, cc=3
+[TEXT] 10:aaaaaaaaaaaa
+[FWD ] -> 127.0.0.1:8600 len=136
+[RECV] 127.0.0.1:41868 len=136 mid=0x1882 apid=0x0082 cc=3 head=18 82 C0 00 00 81 03 1D 31 31 3A 61 61 61 61 61
+[DEBUG] mid/apid check => mid=0x1882, apid=0x0082, cc=3
+[TEXT] 11:aaaaaaaaaaaa
+[FWD ] -> 127.0.0.1:8600 len=136
+[RECV] 127.0.0.1:52076 len=136 mid=0x1882 apid=0x0082 cc=3 head=18 82 C0 00 00 81 03 1E 31 32 3A 61 61 61 61 61
+[DEBUG] mid/apid check => mid=0x1882, apid=0x0082, cc=3
+[TEXT] 12:aaaaaaaaaaaa
+[FWD ] -> 127.0.0.1:8600 len=136
+[2025-10-31 15:22:02] test1 starting…
+[2025-10-31 15:22:02] __file__=/home/vboxuser/SatelliteComSim/src/newGS/test1.py
+[2025-10-31 15:22:02] CSV_PATH=/home/vboxuser/SatelliteComSim/src/newGS/log/sample_app_sent.csv
+[2025-10-31 15:22:02] listening on 0.0.0.0:50000
+[2025-10-31 15:22:02] forwarding to 127.0.0.1:8600
+[2025-10-31 15:22:02] [INIT] running (async): /usr/bin/env bash /home/vboxuser/SatelliteComSim/src/newGS/scripts/setup_tolab_08a9.sh
+[RECV] 127.0.0.1:42262 len=8 mid=0x1880 apid=0x0080 cc=0 head=18 80 C0 00 00 01 00 A6
+[DEBUG] mid/apid check => mid=0x1880, apid=0x0080, cc=0
+[FWD ] -> 127.0.0.1:8600 len=8
+[RECV] 127.0.0.1:51812 len=8 mid=0x1880 apid=0x0080 cc=6 head=18 80 C0 00 00 01 06 A0
+[DEBUG] mid/apid check => mid=0x1880, apid=0x0080, cc=6
+[FWD ] -> 127.0.0.1:8600 len=8
+[2025-10-31 15:22:02] [INIT] rc=0
+[INIT][STDOUT]
+[OK] TO_LAB enabled + 0x08A9 registered (limit=4) on 127.0.0.1:50000
+[RECV] 127.0.0.1:37327 len=16 mid=0x1880 apid=0x0080 cc=2 head=18 80 C0 00 00 09 02 09 A9 08 00 00 00 00 04 00
+[DEBUG] mid/apid check => mid=0x1880, apid=0x0080, cc=2
+[FWD ] -> 127.0.0.1:8600 len=16
+[RECV] 127.0.0.1:49216 len=136 mid=0x1882 apid=0x0082 cc=3 head=18 82 C0 00 00 81 03 13 31 33 3A 71 77 65 61 73
+[DEBUG] mid/apid check => mid=0x1882, apid=0x0082, cc=3
+[TEXT] 13:qweasdzc
+[FWD ] -> 127.0.0.1:8600 len=136

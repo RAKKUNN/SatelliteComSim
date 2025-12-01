@@ -1,8 +1,6 @@
 file(REMOVE_RECURSE
   "CMakeFiles/cmdUtil.dir/SendUdp.c.o"
-  "CMakeFiles/cmdUtil.dir/SendUdp.c.o.d"
   "CMakeFiles/cmdUtil.dir/cmdUtil.c.o"
-  "CMakeFiles/cmdUtil.dir/cmdUtil.c.o.d"
   "cmdUtil"
   "cmdUtil.pdb"
 )

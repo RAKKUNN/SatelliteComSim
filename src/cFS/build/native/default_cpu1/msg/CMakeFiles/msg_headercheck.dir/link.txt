@@ -1,2 +1,0 @@
-/usr/bin/ar qc libmsg_headercheck.a CMakeFiles/msg_headercheck.dir/src/check_ccsds_hdr.h.c.o CMakeFiles/msg_headercheck.dir/src/check_cfe_msg_api_typedefs.h.c.o
-/usr/bin/ranlib libmsg_headercheck.a

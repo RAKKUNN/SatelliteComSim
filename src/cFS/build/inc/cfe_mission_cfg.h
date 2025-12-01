@@ -5,7 +5,8 @@
 
 
 
-#include "/home/vboxuser/SatelliteComSim/src/cFS/cfe/modules/core_api/config/default_cfe_mission_cfg.h"
+/* /home/vboxuser/SatelliteComSim/src/cFS/sample_defs/cfe_mission_cfg.h does not exist */
+#include "/home/vboxuser/SatelliteComSim/src/cFS/sample_defs/sample_mission_cfg.h"
 
 
 #endif /* GENERATED_INCLUDE_CFE_MISSION_CFG_H */

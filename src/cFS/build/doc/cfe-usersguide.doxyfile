@@ -1,0 +1,64 @@
+#---------------------------------------------------------------------------
+# Doxygen Configuration options to generate the "cFE Users Guide"
+#---------------------------------------------------------------------------
+
+# Start with the main page so document ordering is established
+INPUT                 += /home/vboxuser/SatelliteComSim/src/cFS/cfe/docs/src/main.dox
+
+# Common definitions, some of which are extended or overridden here.
+@INCLUDE               = /home/vboxuser/SatelliteComSim/src/cFS/build/doc/cfe-common.doxyfile
+PROJECT_NAME           = "Core Flight Executive Users Guide"
+OUTPUT_DIRECTORY       = users_guide
+GENERATE_LATEX         = YES
+
+# For purposes of the user guide, reference the "stock" mission configuration
+# Although missions may override these files, for the users guide we are mainly
+# interested in the documentation of those items.
+STRIP_FROM_PATH       += /home/vboxuser/SatelliteComSim/src/cFS/cfe/cmake/sample_defs
+INPUT                 += /home/vboxuser/SatelliteComSim/src/cFS/cfe/cmake/sample_defs
+
+#PREDEFINED
+PREDEFINED            += 
+
+# Bring in the cFE header files for the documentation of the various API calls
+INPUT                 += /home/vboxuser/SatelliteComSim/src/cFS/build/doc/osconfig-example.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/ccsds.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/cfe.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/cfe_error.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/cfe_es.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/cfe_es_events.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/cfe_es_extern_typedefs.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/cfe_es_msg.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/cfe_evs.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/cfe_evs_events.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/cfe_evs_extern_typedefs.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/cfe_evs_msg.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/cfe_fs.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/cfe_fs_extern_typedefs.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/cfe_sb.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/cfe_sb_events.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/cfe_sb_extern_typedefs.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/cfe_sb_msg.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/cfe_tbl.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/cfe_tbl_events.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/cfe_tbl_extern_typedefs.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/cfe_tbl_filedef.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/cfe_tbl_msg.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/cfe_time.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/cfe_time_events.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/cfe_time_extern_typedefs.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/cfe_time_msg.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/cfe_version.h \
+/home/vboxuser/SatelliteComSim/src/cFS/cfe/fsw/cfe-core/src/inc/network_includes.h \
+/home/vboxuser/SatelliteComSim/src/cFS/osal/src/os/inc/common_types.h \
+/home/vboxuser/SatelliteComSim/src/cFS/osal/src/os/inc/osapi-os-core.h \
+/home/vboxuser/SatelliteComSim/src/cFS/osal/src/os/inc/osapi-os-filesys.h \
+/home/vboxuser/SatelliteComSim/src/cFS/osal/src/os/inc/osapi-os-loader.h \
+/home/vboxuser/SatelliteComSim/src/cFS/osal/src/os/inc/osapi-os-net.h \
+/home/vboxuser/SatelliteComSim/src/cFS/osal/src/os/inc/osapi-os-timer.h \
+/home/vboxuser/SatelliteComSim/src/cFS/osal/src/os/inc/osapi-version.h \
+/home/vboxuser/SatelliteComSim/src/cFS/osal/src/os/inc/osapi.h \
+/home/vboxuser/SatelliteComSim/src/cFS/psp/fsw/inc/cfe_psp.h \
+/home/vboxuser/SatelliteComSim/src/cFS/psp/fsw/inc/cfe_psp_configdata.h
+INPUT += /home/vboxuser/SatelliteComSim/src/cFS/psp/fsw/pc-linux/src
+INPUT += /home/vboxuser/SatelliteComSim/src/cFS/build/cpu1/default_cpu1/inc

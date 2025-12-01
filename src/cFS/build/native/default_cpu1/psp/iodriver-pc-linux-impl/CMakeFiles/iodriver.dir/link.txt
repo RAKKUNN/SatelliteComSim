@@ -1,2 +1,0 @@
-/usr/bin/ar qc libiodriver.a CMakeFiles/iodriver.dir/src/iodriver.c.o
-/usr/bin/ranlib libiodriver.a

@@ -1,1 +1,1 @@
-/usr/bin/cc -g CMakeFiles/elf2cfetbl.dir/elf2cfetbl.c.o -o elf2cfetbl 
+/usr/bin/cc -g  -rdynamic CMakeFiles/elf2cfetbl.dir/elf2cfetbl.c.o  -o elf2cfetbl 

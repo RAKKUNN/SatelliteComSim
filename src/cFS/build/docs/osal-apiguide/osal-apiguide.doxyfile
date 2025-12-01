@@ -1,9 +1,0 @@
-#---------------------------------------------------------------------------
-# Doxygen Configuration options to generate the "OSAL API Guide"
-#---------------------------------------------------------------------------
-
-# Common definitions, can be overridden here
-@INCLUDE               = /home/vboxuser/SatelliteComSim/src/cFS/build/docs/osal-common.doxyfile
-
-PROJECT_NAME           = "OSAL User's Guide"
-WARN_LOGFILE           = /home/vboxuser/SatelliteComSim/src/cFS/build/docs/osal-apiguide/osal-apiguide-warnings.log
